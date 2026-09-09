@@ -85,35 +85,37 @@ export const DailyOverviewHub: React.FC<DailyOverviewHubProps> = ({
 
   return (
     <div className="w-full max-w-xl mx-auto">
-      <div className="ios-glass-card rounded-2xl p-2 sm:p-2.5 shadow-sm border border-blue-200/60 dark:border-blue-900/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 transition-all">
+      <div className="ios-glass-card rounded-2xl p-3 sm:p-3.5 shadow-sm border border-blue-200/60 dark:border-blue-900/50 space-y-2.5 transition-all">
         
-        {/* Left Section: Dagens Morgoncitat */}
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          <span className="w-6 h-6 rounded-full icon-badge-glass text-blue-700 dark:text-amber-300 shrink-0 flex items-center justify-center">
-            <Quote className="w-3 h-3 icon-realistic" />
-          </span>
-          <p
-            className={`text-xs text-slate-700 dark:text-slate-200 italic truncate font-medium flex-1 min-w-0 transition-opacity duration-150 ${
-              isChanging ? 'opacity-0' : 'opacity-100'
-            }`}
-            title={`"${currentQuote.quote}"`}
-          >
-            "{currentQuote.quote}"
-          </p>
+        {/* Top: Dagens Morgoncitat - Hela meningen syns alltid fullt ut */}
+        <div className="flex items-start justify-between gap-2.5">
+          <div className="flex items-start gap-2.5 flex-1 min-w-0">
+            <span className="w-6 h-6 rounded-full icon-badge-glass text-blue-700 dark:text-amber-300 shrink-0 flex items-center justify-center mt-0.5 shadow-2xs">
+              <Quote className="w-3.5 h-3.5 icon-realistic" />
+            </span>
+            <p
+              className={`text-xs sm:text-sm text-slate-700 dark:text-slate-200 italic font-medium leading-relaxed transition-opacity duration-150 text-left ${
+                isChanging ? 'opacity-0' : 'opacity-100'
+              }`}
+            >
+              "{currentQuote.quote}"
+            </p>
+          </div>
+
           <button
             onClick={getRandomQuote}
             title="Slumpa ett nytt morgoncitat"
             aria-label="Slumpa ett nytt morgoncitat"
-            className="shrink-0 ios-glass-btn p-1 rounded-lg text-slate-500 hover:text-blue-700 dark:text-slate-300 dark:hover:text-amber-300 group"
+            className="shrink-0 ios-glass-btn p-1.5 rounded-xl text-slate-500 hover:text-blue-700 dark:text-slate-300 dark:hover:text-amber-300 group"
           >
-            <Shuffle className="w-3 h-3 icon-realistic group-hover:rotate-180 transition-transform duration-300" />
+            <Shuffle className="w-3.5 h-3.5 icon-realistic group-hover:rotate-180 transition-transform duration-300" />
           </button>
         </div>
 
-        {/* Divider: horizontal on mobile, vertical on tablet/desktop */}
-        <div className="h-px sm:h-6 w-full sm:w-px bg-slate-200/70 dark:bg-slate-700/70 shrink-0" />
+        {/* Divider */}
+        <div className="h-px w-full bg-slate-200/70 dark:bg-slate-800/80" />
 
-        {/* Right Section: Snurröversikt (Idag & Veckan) */}
+        {/* Bottom: Snurröversikt (Idag & Veckan med mätare) */}
         <div
           onClick={onOpenHistory}
           role="button"
@@ -122,10 +124,10 @@ export const DailyOverviewHub: React.FC<DailyOverviewHubProps> = ({
             if (e.key === 'Enter' || e.key === ' ') onOpenHistory?.();
           }}
           title="Klicka för att se full historik & favoriter"
-          className="flex items-center justify-between sm:justify-end gap-3 sm:gap-3.5 shrink-0 cursor-pointer group px-1 sm:px-0"
+          className="flex items-center justify-between gap-3 cursor-pointer group text-xs hover:opacity-95 transition-opacity pt-0.5"
         >
           {/* Idag Segment */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <div className="relative w-6 h-6 flex items-center justify-center shrink-0">
               <svg className="w-6 h-6 -rotate-90 transform" viewBox="0 0 24 24">
                 <circle
@@ -157,29 +159,27 @@ export const DailyOverviewHub: React.FC<DailyOverviewHubProps> = ({
               </div>
             </div>
 
-            <div className="text-left leading-none">
+            <div className="flex items-baseline gap-1 text-left leading-none">
+              <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">Idag:</span>
               <span className="text-xs sm:text-sm font-black font-mono text-slate-900 dark:text-white">
                 {stats.todayCount}
               </span>
-              <span className="text-[9px] font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider ml-1">
-                Idag
-              </span>
+              <span className="text-[10px] text-slate-400 dark:text-slate-500">snurr</span>
             </div>
           </div>
 
-          {/* Veckan Segment */}
-          <div className="flex items-center gap-2">
-            <div className="text-left leading-none">
+          {/* Veckan Segment & 7-dagars aktivitet */}
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
+            <div className="flex items-baseline gap-1 text-left leading-none">
+              <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">Veckan:</span>
               <span className="text-xs sm:text-sm font-black font-mono text-slate-900 dark:text-white">
                 {stats.weekCount}
               </span>
-              <span className="text-[9px] font-bold text-amber-600 dark:text-amber-300 uppercase tracking-wider ml-1">
-                Veckan
-              </span>
+              <span className="text-[10px] text-slate-400 dark:text-slate-500">snurr</span>
             </div>
 
             {/* 7-Day Mini-Meter */}
-            <div className="flex items-end gap-0.5 h-5 pt-0.5">
+            <div className="flex items-end gap-1 h-5 pb-0.5">
               {stats.weekDayCounts.map((count, idx) => {
                 const isToday = idx === stats.currentDayIdx;
                 const hasActivity = count > 0;
@@ -193,22 +193,28 @@ export const DailyOverviewHub: React.FC<DailyOverviewHubProps> = ({
                   >
                     <div
                       style={{ height: `${barHeight}px` }}
-                      className={`w-1 sm:w-1.5 rounded-full transition-all duration-300 ${
+                      className={`w-1.5 rounded-full transition-all duration-300 ${
                         hasActivity
                           ? 'bg-gradient-to-t from-blue-600 to-amber-400 dark:from-blue-500 dark:to-yellow-300 shadow-2xs'
                           : isToday
-                          ? 'bg-blue-400/80 dark:bg-slate-500'
+                          ? 'bg-blue-400/80 dark:bg-amber-400/80'
                           : 'bg-slate-200 dark:bg-slate-700'
                       }`}
                     />
+                    <span className={`text-[8px] font-bold leading-none ${isToday ? 'text-blue-600 dark:text-amber-300' : 'text-slate-400 dark:text-slate-500'}`}>
+                      {weekDayLabels[idx]}
+                    </span>
                   </div>
                 );
               })}
             </div>
+
+            <div className="flex items-center gap-0.5 text-[11px] font-bold text-blue-600 dark:text-amber-300 group-hover:translate-x-0.5 transition-transform shrink-0 pl-1">
+              <span className="hidden sm:inline">Historik</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </div>
           </div>
 
-          {/* Subtle Chevron indicator */}
-          <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600 dark:group-hover:text-amber-300 transition-transform group-hover:translate-x-0.5 shrink-0" />
         </div>
 
       </div>

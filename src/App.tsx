@@ -256,7 +256,7 @@ export default function App() {
 
           <h2 className="text-lg sm:text-2xl font-extrabold font-serif tracking-tight text-slate-900 dark:text-white leading-tight">
             Snurra hjulet ·{' '}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 via-amber-500 to-yellow-500 dark:from-blue-400 dark:via-amber-300 dark:to-yellow-300">
+            <span className="text-amber-600 dark:text-amber-400">
               Ta med dig morgonenergin
             </span>
           </h2>
