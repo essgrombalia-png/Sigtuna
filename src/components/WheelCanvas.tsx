@@ -308,21 +308,25 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         />
       </motion.div>
 
-      {/* Spin Button underneath with welcoming fade-up */}
+      {/* Spin Button underneath with iOS Liquid Glass styling */}
       <motion.button
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
         onClick={spinWheel}
         disabled={isSpinning}
-        className={`mt-3 sm:mt-3.5 w-full sm:w-auto px-6 sm:px-7 py-2.5 sm:py-3 rounded-xl font-extrabold text-sm sm:text-base flex items-center justify-center gap-2 transition-all duration-200 shadow-md ${
+        className={`mt-3 sm:mt-4 w-full sm:w-auto px-7 sm:px-9 py-3 sm:py-3.5 rounded-2xl font-extrabold text-sm sm:text-base flex items-center justify-center gap-2.5 transition-all duration-200 ${
           isSpinning
-            ? 'bg-slate-300 dark:bg-slate-800 text-slate-500 cursor-not-allowed shadow-none'
-            : 'bg-gradient-to-r from-[#004c98] via-blue-600 to-amber-500 hover:from-[#003c7a] hover:via-blue-500 hover:to-amber-400 text-white shadow-[#004c98]/30 hover:shadow-[#004c98]/40 hover:-translate-y-0.5 active:translate-y-0'
+            ? 'bg-slate-300/80 dark:bg-slate-800/80 text-slate-500 cursor-not-allowed shadow-none border border-slate-300 dark:border-slate-700'
+            : 'ios-glass-btn-primary tracking-wide text-white group cursor-pointer'
         }`}
       >
-        <Play className={`w-4 h-4 fill-current ${isSpinning ? 'animate-spin' : ''}`} />
-        <span>{isSpinning ? 'Hjulet snurrar…' : 'Ge mig dagens budskap'}</span>
+        <span className="p-1 rounded-full bg-white/20 dark:bg-white/15 flex items-center justify-center shadow-2xs">
+          <Play className={`w-3.5 h-3.5 fill-current icon-realistic ${isSpinning ? 'animate-spin' : 'group-hover:translate-x-0.5 transition-transform'}`} />
+        </span>
+        <span className="drop-shadow-[0_1px_1px_rgba(0,0,0,0.3)]">
+          {isSpinning ? 'Hjulet snurrar…' : 'Ge mig dagens budskap'}
+        </span>
       </motion.button>
 
     </div>

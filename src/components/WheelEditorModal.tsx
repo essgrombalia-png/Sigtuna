@@ -130,14 +130,14 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[90vh] animate-scaleUp"
+        className="ios-glass-card w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-scaleUp"
       >
         
         {/* Modal Header */}
-        <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-950/50">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
-              <Layers className="w-5 h-5" />
+        <div className="px-6 py-5 border-b border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl icon-badge-glass text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
+              <Layers className="w-5 h-5 icon-realistic" />
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">
@@ -150,11 +150,11 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="ios-glass-btn p-2 rounded-full text-slate-500 dark:text-slate-300"
             title="Stäng"
             aria-label="Stäng"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4 icon-realistic" />
           </button>
         </div>
 
@@ -163,14 +163,14 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
 
           {/* Preset Selector (if multiple presets exist) */}
           {presets.length > 1 && onSelectPreset && (
-            <div className="p-3.5 rounded-2xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-800/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div className="p-4 rounded-2xl ios-glass-card flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="text-xs font-bold text-blue-950 dark:text-blue-200">
                 Aktivt hjul:
               </div>
               <select
                 value={preset.id}
                 onChange={(e) => onSelectPreset(e.target.value)}
-                className="px-3 py-1.5 rounded-xl border border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-3.5 py-2 rounded-xl border border-blue-300/80 dark:border-blue-700/80 bg-white/90 dark:bg-slate-800/90 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 backdrop-blur-md shadow-xs"
               >
                 {presets.map((p) => (
                   <option key={p.id} value={p.id}>
@@ -193,14 +193,14 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
                 setTitle(e.target.value);
                 onUpdatePreset({ ...preset, title: e.target.value, items });
               }}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full px-4 py-2.5 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-800/80 text-slate-900 dark:text-white font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 backdrop-blur-md shadow-xs"
             />
           </div>
 
           {/* Add New Item Form */}
-          <form onSubmit={handleAddItem} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 space-y-3">
+          <form onSubmit={handleAddItem} className="p-4 rounded-2xl ios-glass-card space-y-3">
             <h3 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-              <Plus className="w-4 h-4 text-emerald-600" />
+              <Plus className="w-4 h-4 text-emerald-600 dark:text-emerald-400 icon-realistic" />
               Lägg till nytt budskap i hjulet
             </h3>
 
@@ -211,7 +211,7 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
                   placeholder="Huvudtext (t.ex. DU ÄR BÄST)"
                   value={newItemText}
                   onChange={(e) => setNewItemText(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-800/80 text-slate-900 dark:text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 backdrop-blur-md"
                 />
               </div>
               <div>
@@ -220,13 +220,13 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
                   placeholder="Underrubrik / Förklaring (valfritt)"
                   value={newItemSubtext}
                   onChange={(e) => setNewItemSubtext(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-800/80 text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 backdrop-blur-md"
                 />
               </div>
             </div>
 
             {/* Color Palette Selector */}
-            <div className="flex items-center justify-between gap-2 pt-1">
+            <div className="flex items-center justify-between gap-2 pt-1 flex-wrap">
               <div className="flex items-center gap-1.5 overflow-x-auto py-1">
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mr-1">Färg:</span>
                 {PRESET_COLORS.map((c) => (
@@ -235,8 +235,8 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
                     type="button"
                     onClick={() => setNewItemColor(c)}
                     style={{ backgroundColor: c }}
-                    className={`w-6 h-6 rounded-full transition-transform ${
-                      newItemColor === c ? 'scale-125 ring-2 ring-slate-900 dark:ring-white' : 'hover:scale-110 opacity-90'
+                    className={`w-6 h-6 rounded-full transition-transform shadow-xs ${
+                      newItemColor === c ? 'scale-125 ring-2 ring-blue-600 dark:ring-white' : 'hover:scale-110 opacity-90'
                     }`}
                   />
                 ))}
@@ -245,7 +245,7 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
               <button
                 type="submit"
                 disabled={!newItemText.trim()}
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white transition-all whitespace-nowrap shadow-sm"
+                className="ios-glass-btn-emerald px-4 py-2 rounded-xl text-xs font-bold disabled:opacity-50 whitespace-nowrap"
               >
                 + Lägg till
               </button>
@@ -264,12 +264,12 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between p-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/60 shadow-sm"
+                  className="flex items-center justify-between p-3 rounded-2xl ios-glass-card shadow-xs"
                 >
                   <div className="flex items-center gap-3">
                     <div
                       style={{ backgroundColor: item.color }}
-                      className="w-4 h-4 rounded-full flex-shrink-0 ring-2 ring-white dark:ring-slate-900"
+                      className="w-4 h-4 rounded-full flex-shrink-0 ring-2 ring-white dark:ring-slate-900 shadow-2xs"
                     />
                     <div>
                       <div className="text-xs font-bold text-slate-900 dark:text-white">
@@ -285,10 +285,10 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
 
                   <button
                     onClick={() => handleDeleteItem(item.id)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors"
+                    className="ios-glass-btn p-1.5 rounded-xl text-slate-400 hover:text-rose-600 dark:hover:text-rose-400"
                     title="Ta bort"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-3.5 h-3.5 icon-realistic" />
                   </button>
                 </div>
               ))}
@@ -297,7 +297,7 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
 
           {/* Create Custom Category Form */}
           {isCreatingNew ? (
-            <form onSubmit={handleCreateNewPresetSubmit} className="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/50 space-y-3">
+            <form onSubmit={handleCreateNewPresetSubmit} className="p-4 rounded-2xl ios-glass-card border border-emerald-300/60 dark:border-emerald-700/60 space-y-3">
               <h4 className="text-xs font-bold text-emerald-900 dark:text-emerald-300">
                 Skapa nytt anpassat hjul
               </h4>
@@ -306,31 +306,31 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
                 placeholder="T.ex. Måndagspepp eller Fikatåget"
                 value={newPresetTitle}
                 onChange={(e) => setNewPresetTitle(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsCreatingNew(false)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400"
+                  className="ios-glass-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300"
                 >
                   Avbryt
                 </button>
                 <button
                   type="submit"
                   disabled={!newPresetTitle.trim()}
-                  className="px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white disabled:opacity-50"
+                  className="ios-glass-btn-emerald px-4 py-1.5 rounded-xl text-xs font-bold disabled:opacity-50"
                 >
                   Skapa
                 </button>
               </div>
             </form>
           ) : (
-            <div className="pt-2 flex items-center justify-between gap-3">
+            <div className="pt-2 flex items-center justify-between gap-3 flex-wrap">
               <button
                 type="button"
                 onClick={() => setIsCreatingNew(true)}
-                className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
+                className="ios-glass-btn px-3.5 py-1.5 rounded-xl text-xs font-bold text-blue-700 dark:text-blue-300"
               >
                 + Skapa ett helt nytt hjul
               </button>
@@ -338,9 +338,9 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
               <button
                 type="button"
                 onClick={onResetDefaults}
-                className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
+                className="ios-glass-btn flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
+                <RotateCcw className="w-3.5 h-3.5 icon-realistic" />
                 <span>Återställ standardhjul</span>
               </button>
             </div>
@@ -349,10 +349,10 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 flex items-center justify-end">
+        <div className="px-6 py-4 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-end">
           <button
             onClick={onClose}
-            className="px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors"
+            className="ios-glass-btn-primary px-7 py-2.5 rounded-2xl font-bold text-xs sm:text-sm"
           >
             Klar & Spara
           </button>

@@ -43,7 +43,13 @@ export default function App() {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    if ('startViewTransition' in document) {
+      (document as unknown as { startViewTransition: (cb: () => void) => void }).startViewTransition(() => {
+        setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+      });
+    } else {
+      setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    }
   };
 
   const { playTickSound, playFanfare, playChime } = useAudioSound();
@@ -346,11 +352,11 @@ export default function App() {
           >
             <button
               onClick={() => setIsHistoryOpen(false)}
-              className="absolute top-4 right-4 z-20 p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors"
+              className="absolute top-4 right-4 z-20 ios-glass-btn p-2 rounded-full shadow-md text-slate-600 dark:text-slate-300"
               title="Stäng"
               aria-label="Stäng historik"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4 icon-realistic" />
             </button>
             <HistoryAndFavorites
               history={history}

@@ -49,7 +49,7 @@ export const HistoryAndFavorites: React.FC<HistoryAndFavoritesProps> = ({
   const displayList = activeTab === 'history' ? history : favorites;
 
   return (
-    <div className="w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-xl transition-all">
+    <div className="w-full ios-glass-card rounded-3xl p-6 sm:p-8 shadow-2xl transition-all">
       
       {/* Streak & Header Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-200/80 dark:border-slate-800">
@@ -63,8 +63,8 @@ export const HistoryAndFavorites: React.FC<HistoryAndFavoritesProps> = ({
         </div>
 
         {/* Streak Counter Badge */}
-        <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800/60 text-amber-800 dark:text-amber-300 w-fit">
-          <Flame className="w-5 h-5 text-amber-500 fill-amber-500 animate-bounce" />
+        <div className="flex items-center gap-2.5 px-4 py-2 rounded-2xl ios-glass-card border border-amber-300/50 dark:border-amber-500/30 text-amber-800 dark:text-amber-300 w-fit shadow-xs">
+          <Flame className="w-5 h-5 text-amber-500 fill-amber-500 icon-realistic animate-bounce" />
           <div className="text-left">
             <div className="text-xs font-extrabold leading-none">{streakDays} Dagars Svit!</div>
             <div className="text-[10px] text-amber-700/80 dark:text-amber-400 font-medium mt-0.5">
@@ -75,29 +75,29 @@ export const HistoryAndFavorites: React.FC<HistoryAndFavoritesProps> = ({
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center justify-between gap-2 mb-4">
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl">
+      <div className="flex items-center justify-between gap-2 mb-4 flex-wrap">
+        <div className="flex items-center gap-1.5 p-1 bg-slate-200/50 dark:bg-slate-800/60 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 backdrop-blur-md">
           <button
             onClick={() => setActiveTab('history')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all ${
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-extrabold transition-all ${
               activeTab === 'history'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'ios-glass-btn text-blue-950 dark:text-white shadow-xs'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            <History className="w-3.5 h-3.5" />
+            <History className="w-3.5 h-3.5 icon-realistic" />
             <span>Historik ({history.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab('favorites')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all ${
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-extrabold transition-all ${
               activeTab === 'favorites'
-                ? 'bg-white dark:bg-slate-700 text-rose-600 dark:text-rose-400 shadow-sm'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'ios-glass-btn text-rose-600 dark:text-rose-400 shadow-xs'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            <Heart className="w-3.5 h-3.5 fill-current" />
+            <Heart className="w-3.5 h-3.5 fill-current icon-realistic" />
             <span>Favoriter ({favorites.length})</span>
           </button>
         </div>
@@ -105,11 +105,11 @@ export const HistoryAndFavorites: React.FC<HistoryAndFavoritesProps> = ({
         {history.length > 0 && (
           <button
             onClick={onClearHistory}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 border border-rose-200 dark:border-rose-800/60 transition-colors shadow-2xs active:scale-95"
+            className="ios-glass-btn flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400"
             title="Rensa hela historiken"
             aria-label="Rensa hela historiken"
           >
-            <Trash2 className="w-3.5 h-3.5" />
+            <Trash2 className="w-3.5 h-3.5 icon-realistic" />
             <span>Rensa historik</span>
           </button>
         )}
@@ -117,8 +117,8 @@ export const HistoryAndFavorites: React.FC<HistoryAndFavoritesProps> = ({
 
       {/* List Content */}
       {displayList.length === 0 ? (
-        <div className="py-10 text-center text-slate-400 dark:text-slate-500">
-          <Calendar className="w-8 h-8 mx-auto mb-2 opacity-50" />
+        <div className="py-12 text-center text-slate-400 dark:text-slate-500">
+          <Calendar className="w-8 h-8 mx-auto mb-2 opacity-50 icon-realistic" />
           <p className="text-xs font-medium">
             {activeTab === 'history'
               ? 'Inga tidigare snurr ännu. Snurra hjulet för att börja!'
@@ -139,24 +139,24 @@ export const HistoryAndFavorites: React.FC<HistoryAndFavoritesProps> = ({
             return (
               <div
                 key={record.id}
-                className="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/50 flex items-start justify-between gap-3 hover:border-emerald-500/50 transition-colors"
+                className="p-4 rounded-2xl ios-glass-card flex items-start justify-between gap-3 hover:border-blue-500/50 transition-colors"
               >
                 <div className="flex items-start gap-3">
                   <button
                     onClick={() => onToggleComplete(record.id)}
-                    className="mt-0.5 text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                    className="mt-0.5 text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors active:scale-90"
                     title={record.completed ? 'Genomförd' : 'Markera som klar'}
                   >
                     {record.completed ? (
-                      <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 fill-emerald-100 dark:fill-emerald-950" />
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 fill-emerald-100 dark:fill-emerald-950 icon-realistic" />
                     ) : (
-                      <Circle className="w-5 h-5" />
+                      <Circle className="w-5 h-5 icon-realistic" />
                     )}
                   </button>
 
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                      <span className="text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
                         {record.presetTitle}
                       </span>
                       <span className="text-[11px] text-slate-400">· {dateStr}</span>
@@ -174,14 +174,14 @@ export const HistoryAndFavorites: React.FC<HistoryAndFavoritesProps> = ({
 
                 <button
                   onClick={() => onToggleFavorite(record.id)}
-                  className={`p-1.5 rounded-lg transition-colors ${
+                  className={`ios-glass-btn p-2 rounded-xl transition-all ${
                     record.isFavorite
                       ? 'text-rose-600 dark:text-rose-400'
-                      : 'text-slate-300 dark:text-slate-600 hover:text-slate-500'
+                      : 'text-slate-400 dark:text-slate-500'
                   }`}
                   title={record.isFavorite ? 'Ta bort från favoriter' : 'Spara som favorit'}
                 >
-                  <Heart className={`w-4 h-4 ${record.isFavorite ? 'fill-current' : ''}`} />
+                  <Heart className={`w-4 h-4 icon-realistic ${record.isFavorite ? 'fill-current' : ''}`} />
                 </button>
               </div>
             );
@@ -194,7 +194,7 @@ export const HistoryAndFavorites: React.FC<HistoryAndFavoritesProps> = ({
         <div className="pt-5 mt-5 border-t border-slate-200/80 dark:border-slate-800 flex justify-end">
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-xl text-xs font-bold bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors shadow-sm"
+            className="ios-glass-btn-primary px-6 py-2 rounded-2xl text-xs font-bold"
           >
             Stäng
           </button>

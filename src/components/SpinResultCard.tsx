@@ -133,9 +133,9 @@ export const SpinResultCard: React.FC<SpinResultCardProps> = ({
   // State 1: Currently spinning
   if (isSpinning) {
     return (
-      <div className="w-full max-w-xl mx-auto py-2 px-4 rounded-xl bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/30 text-center shadow-xs animate-pulse">
-        <div className="flex items-center justify-center gap-2 text-amber-700 dark:text-amber-300 font-bold text-xs uppercase tracking-wider">
-          <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-600 dark:text-amber-400" />
+      <div className="w-full max-w-xl mx-auto py-2.5 px-4 rounded-2xl ios-glass-card text-center border border-amber-400/50 dark:border-amber-400/40 animate-pulse">
+        <div className="flex items-center justify-center gap-2 text-amber-800 dark:text-amber-300 font-extrabold text-xs uppercase tracking-wider">
+          <Loader2 className="w-4 h-4 animate-spin text-amber-500 icon-realistic" />
           <span>Hjulet snurrar fram dagens morgonpepp…</span>
         </div>
       </div>
@@ -145,9 +145,9 @@ export const SpinResultCard: React.FC<SpinResultCardProps> = ({
   // State 2: No result yet (Prompt to spin)
   if (!result) {
     return (
-      <div className="w-full max-w-xl mx-auto py-1.5 px-4 rounded-xl bg-emerald-500/10 dark:bg-emerald-950/30 border border-emerald-500/20 text-center shadow-xs">
-        <p className="text-xs sm:text-sm font-semibold text-emerald-800 dark:text-emerald-300 flex items-center justify-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+      <div className="w-full max-w-xl mx-auto py-2 px-4 rounded-2xl ios-glass-card text-center border border-blue-200/50 dark:border-blue-900/40">
+        <p className="text-xs sm:text-sm font-bold text-blue-900 dark:text-blue-200 flex items-center justify-center gap-2">
+          <Sparkles className="w-4 h-4 text-amber-500 icon-realistic animate-pulse" />
           <span>Snurra hjulet för att dra dagens budskap</span>
         </p>
       </div>
@@ -156,20 +156,20 @@ export const SpinResultCard: React.FC<SpinResultCardProps> = ({
 
   // State 3: Result landed!
   return (
-    <div className="w-full max-w-xl mx-auto bg-gradient-to-br from-white via-emerald-50/50 to-teal-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/40 backdrop-blur-md rounded-2xl p-3 sm:p-4 border-2 border-emerald-500/80 shadow-lg relative overflow-hidden transition-all duration-300 animate-fadeIn">
+    <div className="w-full max-w-xl mx-auto ios-glass-card rounded-3xl p-3.5 sm:p-4.5 border-2 border-blue-500/40 dark:border-blue-500/50 shadow-xl relative overflow-hidden transition-all duration-300 animate-fadeIn">
       
       {/* Background Soft Glow */}
-      <div className="absolute -top-12 -right-12 w-32 h-32 bg-emerald-400/15 rounded-full blur-2xl pointer-events-none" />
+      <div className="absolute -top-12 -right-12 w-36 h-36 bg-gradient-to-br from-blue-500/15 via-amber-400/15 to-transparent rounded-full blur-2xl pointer-events-none" />
 
       {/* Top Meta Bar */}
-      <div className="flex items-center justify-between gap-2 mb-1.5">
+      <div className="flex items-center justify-between gap-2 mb-2">
         <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-emerald-600 text-white shadow-xs">
-            <Sparkles className="w-3 h-3 fill-current" />
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xs border border-white/30">
+            <Sparkles className="w-3 h-3 fill-current icon-realistic" />
             <span>Dagens Resultat</span>
           </span>
           {result.category && (
-            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100/80 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/40 dark:border-emerald-800/60">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50/80 dark:bg-blue-950/80 text-blue-900 dark:text-blue-200 border border-blue-200/60 dark:border-blue-800/60 shadow-2xs">
               {result.category}
             </span>
           )}
@@ -177,81 +177,81 @@ export const SpinResultCard: React.FC<SpinResultCardProps> = ({
 
         <button
           onClick={handleToggleFavorite}
-          className={`p-1.5 rounded-lg transition-all ${
+          className={`ios-glass-btn p-2 rounded-2xl transition-all ${
             isFavorite
-              ? 'bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-400 scale-105'
-              : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+              ? 'ios-glass-btn-rose scale-105'
+              : 'text-slate-500 dark:text-slate-400'
           }`}
           title={isFavorite ? 'Sparad i favoriter' : 'Spara som favorit'}
         >
-          <Heart className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} />
+          <Heart className={`w-4 h-4 icon-realistic ${isFavorite ? 'fill-current' : ''}`} />
         </button>
       </div>
 
       {/* Main Result Heading & Subtext */}
-      <div aria-live="polite" className="my-1 text-center sm:text-left">
+      <div aria-live="polite" className="my-1.5 text-center sm:text-left">
         <h2 className="text-base sm:text-lg font-extrabold font-serif text-slate-900 dark:text-white leading-tight">
           {result.text}
         </h2>
         {result.subtext && (
-          <p className="mt-0.5 text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-snug font-medium">
+          <p className="mt-1 text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-snug font-medium">
             {result.subtext}
           </p>
         )}
       </div>
 
-      {/* Action Controls */}
-      <div className="mt-2.5 pt-2 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between gap-2">
+      {/* Action Controls - iOS Liquid Glass Buttons */}
+      <div className="mt-3 pt-2.5 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
         
         {/* Checkmark Completion Button */}
         <button
           onClick={handleToggleComplete}
-          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs font-bold transition-all ${
             isCompleted
-              ? 'bg-emerald-600 text-white shadow-xs'
-              : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-emerald-500'
+              ? 'ios-glass-btn-emerald'
+              : 'ios-glass-btn text-slate-700 dark:text-slate-200'
           }`}
         >
-          <CheckCircle2 className={`w-3.5 h-3.5 ${isCompleted ? 'text-white' : 'text-slate-400'}`} />
+          <CheckCircle2 className={`w-3.5 h-3.5 icon-realistic ${isCompleted ? 'text-white' : 'text-slate-400 dark:text-slate-400'}`} />
           <span>{isCompleted ? 'Klar idag!' : 'Markera som klar'}</span>
         </button>
 
-        <div className="flex items-center gap-1.5">
-          {/* Celebrate Confetti Button */}
+        <div className="flex items-center gap-1.5 ml-auto">
+          {/* Celebrate Confetti Button - iOS Liquid Glass Gold */}
           <button
             onClick={() => triggerMorningConfetti()}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-300 hover:bg-amber-500/20 transition-colors border border-amber-500/30"
+            className="ios-glass-btn-gold flex items-center gap-1 px-3 py-1.5 rounded-2xl text-xs font-bold"
             title="Fira med konfetti"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            <Sparkles className="w-3.5 h-3.5 icon-realistic" />
             <span>Fira</span>
           </button>
 
-          {/* Share Button */}
+          {/* Share Button - iOS Liquid Glass */}
           <button
             onClick={handleShare}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+            className="ios-glass-btn flex items-center gap-1 px-3 py-1.5 rounded-2xl text-xs font-bold text-slate-700 dark:text-slate-200"
             title="Dela budskap"
           >
             {copied ? (
               <>
-                <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 icon-realistic" />
                 <span>Kopierat!</span>
               </>
             ) : (
               <>
-                <Share2 className="w-3.5 h-3.5 text-slate-500" />
+                <Share2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-300 icon-realistic" />
                 <span>Dela</span>
               </>
             )}
           </button>
 
-          {/* Spin Again Button */}
+          {/* Spin Again Button - iOS Liquid Glass */}
           <button
             onClick={onSpinAgain}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-white transition-colors shadow-xs"
+            className="ios-glass-btn flex items-center gap-1 px-3 py-1.5 rounded-2xl text-xs font-bold text-slate-900 dark:text-white"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
+            <RotateCcw className="w-3.5 h-3.5 icon-realistic" />
             <span>Snurra igen</span>
           </button>
         </div>
