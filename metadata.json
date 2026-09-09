@@ -1,0 +1,6 @@
+{
+  "name": "Morgonhjulet",
+  "description": "Användarvänligt lyckohjul för en positiv start på dagen med mörkt läge, offline-synkronisering och push-notiser.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
