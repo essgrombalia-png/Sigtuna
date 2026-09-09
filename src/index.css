@@ -22,13 +22,32 @@
   animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Premium Background: Royal Blue (#004c98), Warm Gold/Yellow (#ffd744), Crisp White (#ffffff) */
+.bg-premium-theme {
+  background-color: #ffffff;
+  background-image:
+    radial-gradient(ellipse at 8% 12%, rgba(0, 76, 152, 0.08) 0%, transparent 48%),
+    radial-gradient(ellipse at 92% 18%, rgba(255, 215, 68, 0.14) 0%, transparent 45%),
+    radial-gradient(circle at 50% 65%, rgba(0, 76, 152, 0.04) 0%, rgba(251, 191, 36, 0.06) 40%, transparent 70%),
+    linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%);
+}
+
+.dark .bg-premium-theme {
+  background-color: #030d1f;
+  background-image:
+    radial-gradient(ellipse at 12% 14%, rgba(0, 76, 152, 0.35) 0%, transparent 55%),
+    radial-gradient(ellipse at 88% 22%, rgba(255, 215, 68, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 50% 70%, rgba(30, 58, 138, 0.25) 0%, rgba(245, 158, 11, 0.08) 45%, transparent 75%),
+    linear-gradient(to bottom, #030d1f 0%, #06152d 100%);
+}
+
 /* Custom Wheel Shadow and Glow Effects */
 .wheel-glow-light {
-  box-shadow: 0 25px 60px -15px rgba(16, 185, 129, 0.25), 0 0 40px rgba(245, 158, 11, 0.15);
+  box-shadow: 0 25px 60px -15px rgba(0, 76, 152, 0.2), 0 0 45px rgba(255, 215, 68, 0.22);
 }
 
 .wheel-glow-dark {
-  box-shadow: 0 25px 60px -15px rgba(16, 185, 129, 0.35), 0 0 50px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 25px 60px -15px rgba(0, 76, 152, 0.45), 0 0 50px rgba(255, 215, 68, 0.18);
 }
 
 /* Custom Scrollbar */

@@ -239,7 +239,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   return (
     <div className="relative flex flex-col items-center justify-center">
       
-      {/* Subtle welcome ambient pulse glow around the wheel */}
+      {/* Subtle welcome ambient pulse glow around the wheel: Sigtuna Blue & Gold */}
       <motion.div
         initial={{ opacity: 0, scale: 0.85 }}
         animate={{
@@ -251,7 +251,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
           scale: { duration: 3.2, repeat: Infinity, ease: 'easeInOut' },
           delay: 0.3,
         }}
-        className="absolute inset-2 -z-10 rounded-full bg-gradient-to-tr from-emerald-500/25 via-teal-400/20 to-amber-400/25 blur-xl pointer-events-none"
+        className="absolute inset-2 -z-10 rounded-full bg-gradient-to-tr from-[#004c98]/25 via-[#ffd744]/20 to-blue-400/25 blur-xl pointer-events-none"
       />
 
       {/* Top Pointer Indicator with welcome fade-in */}
@@ -318,7 +318,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         className={`mt-3 sm:mt-3.5 w-full sm:w-auto px-6 sm:px-7 py-2.5 sm:py-3 rounded-xl font-extrabold text-sm sm:text-base flex items-center justify-center gap-2 transition-all duration-200 shadow-md ${
           isSpinning
             ? 'bg-slate-300 dark:bg-slate-800 text-slate-500 cursor-not-allowed shadow-none'
-            : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-emerald-600/25 hover:shadow-emerald-600/35 hover:-translate-y-0.5 active:translate-y-0'
+            : 'bg-gradient-to-r from-[#004c98] via-blue-600 to-amber-500 hover:from-[#003c7a] hover:via-blue-500 hover:to-amber-400 text-white shadow-[#004c98]/30 hover:shadow-[#004c98]/40 hover:-translate-y-0.5 active:translate-y-0'
         }`}
       >
         <Play className={`w-4 h-4 fill-current ${isSpinning ? 'animate-spin' : ''}`} />

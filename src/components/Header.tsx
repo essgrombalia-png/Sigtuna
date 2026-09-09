@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Moon, Sun, Volume2, VolumeX, Bell, SlidersHorizontal, History, Download, Laptop } from 'lucide-react';
 import { ThemeMode, WheelPreset } from '../types';
 import { usePWAInstall } from '../hooks/usePWAInstall';
+import { SigtunaLogo } from './SigtunaLogo';
 
 interface HeaderProps {
   theme: ThemeMode;
@@ -38,37 +39,35 @@ export const Header: React.FC<HeaderProps> = ({
   const { isInstallable, isInstalled, install } = usePWAInstall();
 
   return (
-    <header className="w-full border-b border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-30 transition-colors shrink-0">
-      <div className="max-w-6xl mx-auto px-3 sm:px-6 h-12 sm:h-14 flex items-center justify-between gap-4">
+    <header className="w-full border-b border-blue-100/80 dark:border-blue-950/60 bg-white/90 dark:bg-[#06152d]/90 backdrop-blur-md sticky top-0 z-30 transition-colors shrink-0 shadow-xs">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 h-13 sm:h-15 flex items-center justify-between gap-3 sm:gap-4">
         
-        {/* Brand Logo & Name - Blue with White S, subtle welcome fade-in */}
+        {/* Official Sigtuna Kommun Logo & Morning Wheel Brand - Full Vector Quality */}
         <motion.div
-          initial={{ opacity: 0, x: -8, scale: 0.95 }}
+          initial={{ opacity: 0, x: -10, scale: 0.96 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="flex items-center gap-2.5"
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+          className="flex items-center gap-2 sm:gap-3 min-w-0"
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-600 dark:bg-blue-500 text-white flex items-center justify-center font-black text-base shadow-sm ring-2 ring-blue-400/40"
-          >
-            S
-          </motion.div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
+          {/* Official Logo with Crest and Sigtuna Kommun typography */}
+          <div className="shrink-0 flex items-center">
+            <SigtunaLogo className="h-8 sm:h-9 w-auto" mode="auto" />
+          </div>
+
+          {/* Elegant divider */}
+          <div className="h-6 w-px bg-slate-300/80 dark:bg-blue-800/60 hidden xs:block" />
+
+          {/* App title */}
+          <div className="flex items-center gap-1.5 min-w-0">
+            <h1 className="text-sm sm:text-base font-extrabold tracking-tight text-slate-900 dark:text-white truncate">
               Morgonhjulet
             </h1>
             {!isOnline && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300/50 dark:border-amber-700/50">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300/50 dark:border-amber-700/50 shrink-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                 Offline
               </span>
             )}
-            <span className="hidden sm:inline text-xs font-medium text-slate-400 dark:text-slate-500">
-              · Sigtuna kommun
-            </span>
           </div>
         </motion.div>
 

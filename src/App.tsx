@@ -18,13 +18,10 @@ import { usePushNotifications } from './hooks/usePushNotifications';
 
 export default function App() {
   // --- Theme Mode State ---
+  // Standard är alltid ljust läge tills användaren aktivt väljer mörkt läge
   const [theme, setTheme] = useState<ThemeMode>(() => {
-    const saved = localStorage.getItem('morgonhjulet_theme') as ThemeMode;
-    if (saved === 'dark' || saved === 'light') return saved;
-    // Default to dark mode if preferred by system or default to dark as requested in earlier turns
-    return typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'dark';
+    const saved = localStorage.getItem('morgonhjulet_theme');
+    return saved === 'dark' ? 'dark' : 'light';
   });
 
   // Apply theme class to document
@@ -38,6 +35,11 @@ export default function App() {
       root.classList.remove('dark');
     }
     localStorage.setItem('morgonhjulet_theme', theme);
+
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', isDark ? '#0f172a' : '#ffffff');
+    }
   }, [theme]);
 
   const toggleTheme = () => {
@@ -208,8 +210,13 @@ export default function App() {
   }).format(new Date());
 
   return (
-    <div className="h-screen max-h-screen flex flex-col justify-between bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors selection:bg-emerald-500 selection:text-white overflow-y-auto sm:overflow-hidden">
+    <div className="h-screen max-h-screen flex flex-col justify-between bg-premium-theme text-slate-900 dark:text-slate-100 transition-colors selection:bg-blue-600 selection:text-white overflow-y-auto sm:overflow-hidden relative">
       
+      {/* Decorative subtle ambient lights: Royal Blue, Warm Gold & Pure White */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 -translate-y-1/2 -translate-x-1/2 bg-blue-500/10 dark:bg-blue-600/20 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute top-1/3 right-10 w-80 h-80 bg-amber-400/15 dark:bg-amber-400/10 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute bottom-10 left-1/3 w-96 h-64 bg-yellow-300/10 dark:bg-blue-900/20 rounded-full blur-3xl pointer-events-none -z-10" />
+
       {/* Header Navigation */}
       <Header
         theme={theme}
@@ -236,14 +243,14 @@ export default function App() {
         {/* Top Section with Title and Morning Quote */}
         <div className="text-center max-w-2xl mx-auto space-y-1 sm:space-y-1.5 shrink-0">
           <div className="flex items-center justify-center gap-2">
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 capitalize">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold bg-blue-50 dark:bg-blue-950/70 text-blue-900 dark:text-blue-200 border border-blue-200/60 dark:border-blue-800/60 capitalize shadow-2xs">
               {todayDateFormatted}
             </span>
           </div>
 
           <h2 className="text-lg sm:text-2xl font-extrabold font-serif tracking-tight text-slate-900 dark:text-white leading-tight">
             Snurra hjulet ·{' '}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-teal-500 to-amber-500">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 via-amber-500 to-yellow-500 dark:from-blue-400 dark:via-amber-300 dark:to-yellow-300">
               Ta med dig morgonenergin
             </span>
           </h2>
@@ -287,10 +294,13 @@ export default function App() {
       </main>
 
       {/* Footer - Sleek single-line bottom bar */}
-      <footer className="border-t border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 py-1.5 px-4 text-center text-[11px] text-slate-500 dark:text-slate-400 shrink-0">
+      <footer className="border-t border-blue-100/70 dark:border-blue-950/60 bg-white/80 dark:bg-[#06152d]/80 backdrop-blur-xs py-1.5 px-4 text-center text-[11px] text-slate-500 dark:text-slate-400 shrink-0">
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-2">
-          <span><strong>Sigtuna kommun</strong> · Morgonhjulet för medarbetare & team</span>
-          <span className="hidden sm:inline">Offline-stöd med PWA</span>
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block w-2 h-2 rounded-full bg-blue-600 dark:bg-amber-400" />
+            <span><strong className="text-slate-700 dark:text-slate-200">Sigtuna kommun</strong> · Morgonhjulet för medarbetare & team</span>
+          </span>
+          <span className="hidden sm:inline text-blue-700 dark:text-amber-400 font-medium">Officiell grafisk profil</span>
         </div>
       </footer>
 
