@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { WheelPreset, WheelItem } from '../types';
-import { X, Plus, Trash2, RotateCcw, Palette, Layers, Check } from 'lucide-react';
+import { X, Plus, Trash2, RotateCcw, Palette, Layers, Check, HelpCircle, Lightbulb, Sparkles, ChevronRight } from 'lucide-react';
 
 interface WheelEditorModalProps {
   isOpen: boolean;
@@ -50,6 +50,7 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
 
   const [newPresetTitle, setNewPresetTitle] = useState<string>('');
   const [isCreatingNew, setIsCreatingNew] = useState<boolean>(false);
+  const [showHelpTooltip, setShowHelpTooltip] = useState<boolean>(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -134,15 +135,43 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
       >
         
         {/* Modal Header */}
-        <div className="px-6 py-5 border-b border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between">
+        <div className="px-6 py-5 border-b border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between relative">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl icon-badge-glass text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
               <Layers className="w-5 h-5 icon-realistic" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                Anpassa Morgonhjulet
-              </h2>
+              <div className="flex items-center gap-1.5">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Anpassa Morgonhjulet
+                </h2>
+                {/* Subtle Interactive Tooltip Trigger */}
+                <div className="relative inline-block">
+                  <button
+                    type="button"
+                    onClick={() => setShowHelpTooltip(!showHelpTooltip)}
+                    onMouseEnter={() => setShowHelpTooltip(true)}
+                    onMouseLeave={() => setShowHelpTooltip(false)}
+                    aria-label="Hjälp och tips för egna hjul"
+                    className="p-1 rounded-full text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/60 transition-colors cursor-pointer"
+                  >
+                    <HelpCircle className="w-4 h-4 icon-realistic" />
+                  </button>
+
+                  {/* Tooltip Popover */}
+                  {showHelpTooltip && (
+                    <div className="absolute left-0 top-full mt-1 z-30 w-72 sm:w-80 p-3 rounded-2xl bg-slate-900/95 dark:bg-slate-950/95 text-white text-xs backdrop-blur-md shadow-2xl border border-slate-700/70 animate-fadeIn pointer-events-none">
+                      <div className="font-bold flex items-center gap-1.5 text-amber-400 mb-1">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>Skapa personliga temahjul</span>
+                      </div>
+                      <p className="text-slate-300 leading-relaxed text-[11px]">
+                        Du kan anpassa befintliga texter eller skapa helt egna hjul för specifika förvaltningar, måndagsmöten, fikaraster eller personliga mål via knappen <em>"+ Skapa ett helt nytt hjul"</em>.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Redigera texter, färger och lägg till egna budskap
               </p>
@@ -160,6 +189,31 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
 
         {/* Modal Body */}
         <div className="p-6 overflow-y-auto space-y-6 flex-1">
+
+          {/* Subtle Guidance & Inspiration Card */}
+          <div className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-50/80 via-amber-50/60 to-blue-50/80 dark:from-blue-950/40 dark:via-amber-950/30 dark:to-blue-950/40 border border-blue-200/70 dark:border-blue-800/60 shadow-xs flex items-start gap-3">
+            <div className="w-7 h-7 rounded-xl bg-amber-400/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+              <Lightbulb className="w-4 h-4 icon-realistic" />
+            </div>
+            <div className="flex-1 text-xs space-y-1">
+              <p className="font-bold text-slate-900 dark:text-slate-100 flex items-center justify-between">
+                <span>Tips för personlig relevans i din vardag</span>
+              </p>
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-[11.5px]">
+                Skapa unika hjul anpassade för din enhet inom Sigtuna kommun (t.ex. <em>Socialförvaltningen</em>, <em>Skolteamet</em> eller <em>Fredagspepp</em>). Du kan ha flera olika hjul sparade och växla mellan dem när som helst.
+              </p>
+              {!isCreatingNew && (
+                <button
+                  type="button"
+                  onClick={() => setIsCreatingNew(true)}
+                  className="inline-flex items-center gap-1 text-[11px] font-extrabold text-blue-700 dark:text-amber-300 hover:underline pt-0.5"
+                >
+                  <span>+ Skapa en ny hjul-kategori nu</span>
+                  <ChevronRight className="w-3 h-3" />
+                </button>
+              )}
+            </div>
+          </div>
 
           {/* Preset Selector (if multiple presets exist) */}
           {presets.length > 1 && onSelectPreset && (
