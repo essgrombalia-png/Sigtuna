@@ -124,10 +124,10 @@ export const DailyOverviewHub: React.FC<DailyOverviewHubProps> = ({
             if (e.key === 'Enter' || e.key === ' ') onOpenHistory?.();
           }}
           title="Klicka för att se full historik & favoriter"
-          className="flex items-center justify-between gap-3 cursor-pointer group text-xs hover:opacity-95 transition-opacity pt-0.5"
+          className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 sm:gap-3 cursor-pointer group text-xs hover:opacity-95 transition-opacity pt-0.5"
         >
           {/* Idag Segment */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <div className="relative w-6 h-6 flex items-center justify-center shrink-0">
               <svg className="w-6 h-6 -rotate-90 transform" viewBox="0 0 24 24">
                 <circle
@@ -169,7 +169,7 @@ export const DailyOverviewHub: React.FC<DailyOverviewHubProps> = ({
           </div>
 
           {/* Veckan Segment & 7-dagars aktivitet */}
-          <div className="flex items-center gap-2.5 sm:gap-3.5">
+          <div className="flex items-center gap-2 sm:gap-3.5 shrink-0 ml-auto sm:ml-0">
             <div className="flex items-baseline gap-1 text-left leading-none">
               <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">Veckan:</span>
               <span className="text-xs sm:text-sm font-black font-mono text-slate-900 dark:text-white">

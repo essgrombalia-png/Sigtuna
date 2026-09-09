@@ -216,7 +216,7 @@ export default function App() {
   }).format(new Date());
 
   return (
-    <div className="h-screen max-h-screen flex flex-col justify-between bg-premium-theme text-slate-900 dark:text-slate-100 transition-colors selection:bg-blue-600 selection:text-white overflow-y-auto sm:overflow-hidden relative">
+    <div className="min-h-[100dvh] h-[100dvh] flex flex-col justify-between bg-premium-theme text-slate-900 dark:text-slate-100 transition-colors selection:bg-blue-600 selection:text-white overflow-y-auto relative">
       
       {/* Decorative subtle ambient lights: Royal Blue, Warm Gold & Pure White */}
       <div className="absolute top-0 left-1/4 w-96 h-96 -translate-y-1/2 -translate-x-1/2 bg-blue-500/10 dark:bg-blue-600/20 rounded-full blur-3xl pointer-events-none -z-10" />
