@@ -133,7 +133,7 @@ export const SpinResultCard: React.FC<SpinResultCardProps> = ({
   // State 1: Currently spinning
   if (isSpinning) {
     return (
-      <div className="w-full max-w-xl mx-auto py-2.5 px-4 rounded-2xl ios-glass-card text-center border border-amber-400/50 dark:border-amber-400/40 animate-pulse">
+      <div className="w-full max-w-xl mx-auto -translate-y-2 sm:-translate-y-2.5 py-2.5 px-4 rounded-2xl ios-glass-card text-center border border-amber-400/50 dark:border-amber-400/40 animate-pulse">
         <div className="flex items-center justify-center gap-2 text-amber-800 dark:text-amber-300 font-extrabold text-xs uppercase tracking-wider">
           <Loader2 className="w-4 h-4 animate-spin text-amber-500 icon-realistic" />
           <span>Hjulet snurrar fram dagens morgonpepp…</span>
@@ -145,7 +145,7 @@ export const SpinResultCard: React.FC<SpinResultCardProps> = ({
   // State 2: No result yet (Prompt to spin)
   if (!result) {
     return (
-      <div className="w-full max-w-xl mx-auto py-2 px-4 rounded-2xl ios-glass-card text-center border border-blue-200/50 dark:border-blue-900/40">
+      <div className="w-full max-w-xl mx-auto -translate-y-2 sm:-translate-y-2.5 py-2 px-4 rounded-2xl ios-glass-card text-center border border-blue-200/50 dark:border-blue-900/40">
         <p className="text-xs sm:text-sm font-bold text-blue-900 dark:text-blue-200 flex items-center justify-center gap-2">
           <Sparkles className="w-4 h-4 text-amber-500 icon-realistic animate-pulse" />
           <span>Snurra hjulet för att dra dagens budskap</span>
@@ -156,7 +156,7 @@ export const SpinResultCard: React.FC<SpinResultCardProps> = ({
 
   // State 3: Result landed!
   return (
-    <div className="w-full max-w-xl mx-auto ios-glass-card rounded-3xl p-3.5 sm:p-4.5 border-2 border-blue-500/40 dark:border-blue-500/50 shadow-xl relative overflow-hidden transition-all duration-300 animate-fadeIn">
+    <div className="w-full max-w-xl mx-auto -translate-y-2 sm:-translate-y-2.5 ios-glass-card rounded-3xl p-3.5 sm:p-4.5 border-2 border-blue-500/40 dark:border-blue-500/50 shadow-xl relative overflow-hidden transition-all duration-300 animate-fadeIn">
       
       {/* Background Soft Glow */}
       <div className="absolute -top-12 -right-12 w-36 h-36 bg-gradient-to-br from-blue-500/15 via-amber-400/15 to-transparent rounded-full blur-2xl pointer-events-none" />
