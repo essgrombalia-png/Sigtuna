@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import { Header } from './components/Header';
 import { WheelCanvas } from './components/WheelCanvas';
 import { SpinResultCard } from './components/SpinResultCard';
-import { MorningQuoteBanner } from './components/MorningQuoteBanner';
+import { DailyOverviewHub } from './components/DailyOverviewHub';
 import { HistoryAndFavorites } from './components/HistoryAndFavorites';
 import { WheelEditorModal } from './components/WheelEditorModal';
 import { NotificationSettingsModal } from './components/NotificationSettingsModal';
@@ -244,10 +244,10 @@ export default function App() {
       />
 
       {/* Main App Content Layout - Compact single viewport */}
-      <main className="flex-1 flex flex-col justify-evenly max-w-4xl w-full mx-auto px-3 sm:px-6 py-1 sm:py-2 min-h-0">
+      <main className="flex-1 flex flex-col justify-evenly max-w-xl w-full mx-auto px-3 sm:px-4 py-1 sm:py-2 min-h-0 space-y-1.5 sm:space-y-2">
         
-        {/* Top Section with Title and Morning Quote */}
-        <div className="text-center max-w-2xl mx-auto space-y-1 sm:space-y-1.5 shrink-0">
+        {/* Top Section with Title and Unified Morning Inspiration & Stats Hub */}
+        <div className="text-center w-full space-y-1 sm:space-y-1.5 shrink-0">
           <div className="flex items-center justify-center gap-2">
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold bg-blue-50 dark:bg-blue-950/70 text-blue-900 dark:text-blue-200 border border-blue-200/60 dark:border-blue-800/60 capitalize shadow-2xs">
               {todayDateFormatted}
@@ -261,8 +261,11 @@ export default function App() {
             </span>
           </h2>
 
-          {/* Slumpmässigt utvalt inspirerande morgoncitat */}
-          <MorningQuoteBanner />
+          {/* Samlad organiserad panel: Citat med shuffle + Dagens & Veckans mätare */}
+          <DailyOverviewHub
+            history={history}
+            onOpenHistory={() => setIsHistoryOpen(true)}
+          />
         </div>
 
         {/* Centered Wheel & Result Banner Section */}

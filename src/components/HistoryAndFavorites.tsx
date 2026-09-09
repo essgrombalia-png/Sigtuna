@@ -42,6 +42,20 @@ export const HistoryAndFavorites: React.FC<HistoryAndFavoritesProps> = ({
     return uniqueDates.length;
   }, [history]);
 
+  // Calculate today and week counts
+  const todayCount = useMemo(() => {
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    return history.filter((r) => new Date(r.timestamp).getTime() >= startOfToday).length;
+  }, [history]);
+
+  const weekCount = useMemo(() => {
+    const now = new Date();
+    const mondayOffset = (now.getDay() + 6) % 7;
+    const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - mondayOffset).getTime();
+    return history.filter((r) => new Date(r.timestamp).getTime() >= startOfWeek).length;
+  }, [history]);
+
   const favorites = useMemo(() => {
     return history.filter((item) => item.isFavorite);
   }, [history]);
@@ -51,7 +65,7 @@ export const HistoryAndFavorites: React.FC<HistoryAndFavoritesProps> = ({
   return (
     <div className="w-full ios-glass-card rounded-3xl p-6 sm:p-8 shadow-2xl transition-all">
       
-      {/* Streak & Header Row */}
+      {/* Streak & Stats Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-200/80 dark:border-slate-800">
         <div>
           <h3 className="text-xl font-bold font-serif text-slate-900 dark:text-white flex items-center gap-2">
@@ -62,14 +76,21 @@ export const HistoryAndFavorites: React.FC<HistoryAndFavoritesProps> = ({
           </p>
         </div>
 
-        {/* Streak Counter Badge */}
-        <div className="flex items-center gap-2.5 px-4 py-2 rounded-2xl ios-glass-card border border-amber-300/50 dark:border-amber-500/30 text-amber-800 dark:text-amber-300 w-fit shadow-xs">
-          <Flame className="w-5 h-5 text-amber-500 fill-amber-500 icon-realistic animate-bounce" />
-          <div className="text-left">
-            <div className="text-xs font-extrabold leading-none">{streakDays} Dagars Svit!</div>
-            <div className="text-[10px] text-amber-700/80 dark:text-amber-400 font-medium mt-0.5">
-              Positiva morgnar
-            </div>
+        {/* Stats Pill Badges */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl ios-glass-card text-blue-900 dark:text-blue-200 text-xs font-bold shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400" />
+            <span>Idag: <strong>{todayCount}</strong></span>
+          </div>
+
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl ios-glass-card text-amber-900 dark:text-amber-200 text-xs font-bold shadow-xs">
+            <Calendar className="w-3 h-3 text-amber-600 dark:text-amber-400 icon-realistic" />
+            <span>Veckan: <strong>{weekCount}</strong></span>
+          </div>
+
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl ios-glass-card border border-amber-300/50 dark:border-amber-500/30 text-amber-800 dark:text-amber-300 shadow-xs">
+            <Flame className="w-4 h-4 text-amber-500 fill-amber-500 icon-realistic animate-bounce" />
+            <span className="text-xs font-extrabold">{streakDays} dgr svit!</span>
           </div>
         </div>
       </div>

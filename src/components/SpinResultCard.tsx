@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { WheelItem, SpinRecord } from '../types';
-import { Sparkles, CheckCircle2, Heart, Share2, Check, RotateCcw, Loader2 } from 'lucide-react';
+import { Sparkles, CheckCircle2, Heart, Share2, Check, RotateCcw, Loader2, X } from 'lucide-react';
 import { triggerMorningConfetti } from '../utils/confetti';
 
 interface SpinResultCardProps {
@@ -133,7 +133,7 @@ export const SpinResultCard: React.FC<SpinResultCardProps> = ({
   // State 1: Currently spinning
   if (isSpinning) {
     return (
-      <div className="w-full max-w-xl mx-auto -translate-y-2 sm:-translate-y-2.5 py-2.5 px-4 rounded-2xl ios-glass-card text-center border border-amber-400/50 dark:border-amber-400/40 animate-pulse">
+      <div className="w-full max-w-xl mx-auto py-2.5 px-4 rounded-2xl ios-glass-card text-center border border-amber-400/50 dark:border-amber-400/40 animate-pulse">
         <div className="flex items-center justify-center gap-2 text-amber-800 dark:text-amber-300 font-extrabold text-xs uppercase tracking-wider">
           <Loader2 className="w-4 h-4 animate-spin text-amber-500 icon-realistic" />
           <span>Hjulet snurrar fram dagens morgonpepp…</span>
@@ -145,7 +145,7 @@ export const SpinResultCard: React.FC<SpinResultCardProps> = ({
   // State 2: No result yet (Prompt to spin)
   if (!result) {
     return (
-      <div className="w-full max-w-xl mx-auto -translate-y-2 sm:-translate-y-2.5 py-2 px-4 rounded-2xl ios-glass-card text-center border border-blue-200/50 dark:border-blue-900/40">
+      <div className="w-full max-w-xl mx-auto py-2 px-4 rounded-2xl ios-glass-card text-center border border-blue-200/50 dark:border-blue-900/40">
         <p className="text-xs sm:text-sm font-bold text-blue-900 dark:text-blue-200 flex items-center justify-center gap-2">
           <Sparkles className="w-4 h-4 text-amber-500 icon-realistic animate-pulse" />
           <span>Snurra hjulet för att dra dagens budskap</span>
@@ -156,36 +156,47 @@ export const SpinResultCard: React.FC<SpinResultCardProps> = ({
 
   // State 3: Result landed!
   return (
-    <div className="w-full max-w-xl mx-auto -translate-y-2 sm:-translate-y-2.5 ios-glass-card rounded-3xl p-3.5 sm:p-4.5 border-2 border-blue-500/40 dark:border-blue-500/50 shadow-xl relative overflow-hidden transition-all duration-300 animate-fadeIn">
+    <div className="w-full max-w-xl mx-auto ios-glass-card rounded-3xl p-3 sm:p-4 border-2 border-blue-500/40 dark:border-blue-500/50 shadow-xl relative overflow-hidden transition-all duration-300 animate-fadeIn">
       
       {/* Background Soft Glow */}
       <div className="absolute -top-12 -right-12 w-36 h-36 bg-gradient-to-br from-blue-500/15 via-amber-400/15 to-transparent rounded-full blur-2xl pointer-events-none" />
 
       {/* Top Meta Bar */}
-      <div className="flex items-center justify-between gap-2 mb-2">
+      <div className="flex items-center justify-between gap-2 mb-1.5">
         <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xs border border-white/30">
+          <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xs border border-white/30">
             <Sparkles className="w-3 h-3 fill-current icon-realistic" />
             <span>Dagens Resultat</span>
           </span>
           {result.category && (
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50/80 dark:bg-blue-950/80 text-blue-900 dark:text-blue-200 border border-blue-200/60 dark:border-blue-800/60 shadow-2xs">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-blue-50/80 dark:bg-blue-950/80 text-blue-900 dark:text-blue-200 border border-blue-200/60 dark:border-blue-800/60 shadow-2xs">
               {result.category}
             </span>
           )}
         </div>
 
-        <button
-          onClick={handleToggleFavorite}
-          className={`ios-glass-btn p-2 rounded-2xl transition-all ${
-            isFavorite
-              ? 'ios-glass-btn-rose scale-105'
-              : 'text-slate-500 dark:text-slate-400'
-          }`}
-          title={isFavorite ? 'Sparad i favoriter' : 'Spara som favorit'}
-        >
-          <Heart className={`w-4 h-4 icon-realistic ${isFavorite ? 'fill-current' : ''}`} />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={handleToggleFavorite}
+            className={`ios-glass-btn p-1.5 rounded-xl transition-all ${
+              isFavorite
+                ? 'ios-glass-btn-rose scale-105'
+                : 'text-slate-500 dark:text-slate-400'
+            }`}
+            title={isFavorite ? 'Sparad i favoriter' : 'Spara som favorit'}
+          >
+            <Heart className={`w-3.5 h-3.5 icon-realistic ${isFavorite ? 'fill-current' : ''}`} />
+          </button>
+
+          <button
+            onClick={onSpinAgain}
+            className="ios-glass-btn p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+            title="Dölj / stäng resultat"
+            aria-label="Dölj / stäng resultat"
+          >
+            <X className="w-3.5 h-3.5 icon-realistic" />
+          </button>
+        </div>
       </div>
 
       {/* Main Result Heading & Subtext */}
