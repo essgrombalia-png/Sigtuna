@@ -104,8 +104,68 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
 
       // Dynamic font size and length limit based on wheel diameter and item count
       const baseFontSize = Math.max(9, Math.min(13, Math.round(size / 28)));
-      const actualFontSize = numItems > 10 ? Math.max(8.5, baseFontSize - 1.5) : baseFontSize;
-      const maxLabelLength = size < 300 ? 18 : (size < 360 ? 22 : 26);
+      const actualFontSize = numItems > 10 ? Math.max(8.5, baseFontSize - 1.2) : baseFontSize;
+
+      // Scaled Center Knob / Hub
+      const outerKnobRadius = Math.max(26, Math.min(40, Math.round(size * 0.105)));
+      const innerKnobRadius = outerKnobRadius - 6;
+      const availableRadial = radius - outerKnobRadius - (size < 300 ? 14 : 20);
+
+      // Helper function to format & balance wheel segment text
+      const formatSegmentText = (
+        rawText: string
+      ): { lines: string[]; fontSize: number } => {
+        const clean = rawText.trim();
+
+        // 1. Check if it fits comfortably on 1 line
+        ctx.font = `800 ${actualFontSize}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+        const singleWidth = ctx.measureText(clean).width;
+
+        if (singleWidth <= availableRadial * 0.88 && clean.length <= 15) {
+          return { lines: [clean], fontSize: actualFontSize };
+        }
+
+        // 2. Multi-word phrase: split into 2 balanced lines
+        const words = clean.split(/\s+/);
+        if (words.length <= 1) {
+          let fSize = actualFontSize;
+          while (fSize > 7.5 && ctx.measureText(clean).width > availableRadial * 0.95) {
+            fSize -= 0.5;
+            ctx.font = `800 ${fSize}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+          }
+          return { lines: [clean], fontSize: fSize };
+        }
+
+        // Find optimal split point
+        let bestSplit = 1;
+        let minDiff = Infinity;
+        for (let i = 1; i < words.length; i++) {
+          const l1 = words.slice(0, i).join(' ');
+          const l2 = words.slice(i).join(' ');
+          const diff = Math.abs(l1.length - l2.length);
+          if (diff < minDiff) {
+            minDiff = diff;
+            bestSplit = i;
+          }
+        }
+
+        const line1 = words.slice(0, bestSplit).join(' ');
+        const line2 = words.slice(bestSplit).join(' ');
+
+        let fSize = Math.max(7.5, actualFontSize - 0.8);
+        ctx.font = `800 ${fSize}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+
+        while (
+          fSize > 7 &&
+          (ctx.measureText(line1).width > availableRadial * 0.92 ||
+            ctx.measureText(line2).width > availableRadial * 0.92)
+        ) {
+          fSize -= 0.4;
+          ctx.font = `800 ${fSize}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+        }
+
+        return { lines: [line1, line2], fontSize: fSize };
+      };
 
       // Draw Segments
       items.forEach((item, index) => {
@@ -123,7 +183,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         ctx.fill();
 
         // Subtle slice border
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
         ctx.lineWidth = 1.8;
         ctx.stroke();
 
@@ -132,18 +192,67 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         ctx.rotate(startAngle + sliceAngle / 2);
 
         ctx.textAlign = 'right';
-        ctx.fillStyle = item.textColor || '#ffffff';
-        ctx.font = `800 ${actualFontSize}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+        ctx.textBaseline = 'middle';
 
-        // Segment label: use wheelLabel if available, otherwise text
-        let label = item.wheelLabel || item.text;
-        if (label.length > maxLabelLength) {
-          label = label.substring(0, maxLabelLength - 2) + '…';
+        const label = item.wheelLabel || item.text;
+        const { lines, fontSize: itemFontSize } = formatSegmentText(label);
+
+        ctx.font = `800 ${itemFontSize}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+
+        const textRightEdge = radius - (size < 300 ? 12 : 18);
+        const maxLineWidth = Math.max(...lines.map((l) => ctx.measureText(l).width));
+
+        // Subtle translucent background plate/pill behind text for maximum legibility on any color
+        const padX = Math.max(7, Math.min(11, size * 0.024));
+        const lineHeight = itemFontSize * 1.25;
+        const totalTextHeight = lines.length === 1 ? itemFontSize * 1.15 : lineHeight * 1.85;
+        const platePadY = Math.max(3.5, Math.min(6, size * 0.014));
+        const plateH = totalTextHeight + platePadY * 2;
+        const plateW = maxLineWidth + padX * 2;
+        const plateX = textRightEdge - maxLineWidth - padX;
+        const plateY = -plateH / 2;
+        const pillRadius = Math.min(plateH / 2, 7);
+
+        ctx.save();
+        ctx.beginPath();
+        if (typeof ctx.roundRect === 'function') {
+          ctx.roundRect(plateX, plateY, plateW, plateH, pillRadius);
+        } else {
+          ctx.rect(plateX, plateY, plateW, plateH);
         }
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.28)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+        ctx.restore();
 
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+        // Text Outline / Deep Shadow for perfect readability
+        ctx.save();
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.lineWidth = Math.max(1.8, Math.min(2.8, itemFontSize * 0.22));
+
+        ctx.fillStyle = item.textColor || '#ffffff';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
         ctx.shadowBlur = 4;
-        ctx.fillText(label, radius - (size < 300 ? 18 : 24), actualFontSize * 0.35);
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 1;
+
+        if (lines.length === 1) {
+          ctx.strokeText(lines[0], textRightEdge, 0);
+          ctx.fillText(lines[0], textRightEdge, 0);
+        } else {
+          const y1 = -lineHeight * 0.48;
+          const y2 = lineHeight * 0.52;
+
+          ctx.strokeText(lines[0], textRightEdge, y1);
+          ctx.fillText(lines[0], textRightEdge, y1);
+
+          ctx.strokeText(lines[1], textRightEdge, y2);
+          ctx.fillText(lines[1], textRightEdge, y2);
+        }
+        ctx.restore();
 
         ctx.restore();
       });
@@ -166,9 +275,22 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
       ctx.stroke();
       ctx.restore();
 
-      // Scaled Center Knob / Hub
-      const outerKnobRadius = Math.max(26, Math.min(40, Math.round(size * 0.105)));
-      const innerKnobRadius = outerKnobRadius - 6;
+      // Outer Rim Decorative Studs/Pins
+      const pinRadius = Math.max(2, Math.min(3.2, size * 0.008));
+      for (let i = 0; i < numItems; i++) {
+        const pinAngle = rotationAngle + i * sliceAngle;
+        const pinX = centerX + Math.cos(pinAngle) * (radius - 1);
+        const pinY = centerY + Math.sin(pinAngle) * (radius - 1);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(pinX, pinY, pinRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = '#f8fafc';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+        ctx.shadowBlur = 2;
+        ctx.fill();
+        ctx.restore();
+      }
 
       ctx.save();
       ctx.beginPath();

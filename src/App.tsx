@@ -82,7 +82,7 @@ export default function App() {
   } = usePushNotifications();
 
   // --- Presets & Active Wheel State ---
-  const PRESET_VERSION = 'v3_nyamorgonpepp';
+  const PRESET_VERSION = 'v4_cleantypography';
   const [presets, setPresets] = useState<WheelPreset[]>(() => {
     try {
       const savedVersion = localStorage.getItem('morgonhjulet_presets_version');
