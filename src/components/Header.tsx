@@ -4,6 +4,7 @@ import { Moon, Sun, Volume2, VolumeX, Bell, SlidersHorizontal, History, Download
 import { ThemeMode, WheelPreset } from '../types';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import { SigtunaLogo } from './SigtunaLogo';
+import { getTodayGreeting } from '../data/dailyGreetings';
 
 interface HeaderProps {
   theme: ThemeMode;
@@ -37,6 +38,7 @@ export const Header: React.FC<HeaderProps> = ({
   isOnline,
 }) => {
   const { isInstallable, isInstalled, install } = usePWAInstall();
+  const todayGreeting = getTodayGreeting();
 
   return (
     <header className="w-full border-b border-blue-100/80 dark:border-blue-950/60 bg-white/90 dark:bg-[#06152d]/90 backdrop-blur-md sticky top-0 z-30 transition-colors shrink-0 shadow-xs">
@@ -47,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({
           initial={{ opacity: 0, x: -10, scale: 0.96 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-          className="flex items-center gap-2 sm:gap-3 min-w-0"
+          className="flex items-center gap-2 sm:gap-3 min-w-0 shrink-0"
         >
           {/* Official Logo with Crest and Sigtuna Kommun typography */}
           <div className="shrink-0 flex items-center">
@@ -70,6 +72,31 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </div>
         </motion.div>
+
+        {/* Center: Friendly Day-Specific Greeting Banner (e.g. Yay fredag!) */}
+        <motion.div
+          initial={{ opacity: 0, y: -6, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.08 }}
+          className="hidden md:flex items-center px-3.5 py-1.5 rounded-2xl bg-gradient-to-r from-blue-50/90 via-amber-50/70 to-blue-50/90 dark:from-blue-950/70 dark:via-amber-950/40 dark:to-blue-950/70 border border-blue-200/70 dark:border-blue-800/60 shadow-xs max-w-sm lg:max-w-md mx-2 select-none group cursor-default"
+          title={`${todayGreeting.headline} — ${todayGreeting.subtext}`}
+        >
+          <div className="min-w-0 text-left">
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-black tracking-tight text-slate-900 dark:text-slate-100 truncate">
+                {todayGreeting.headline}
+              </span>
+            </div>
+            <p className="text-[10px] sm:text-[10.5px] font-medium text-slate-500 dark:text-slate-400 truncate leading-tight">
+              {todayGreeting.subtext}
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Compact Tablet-only day banner */}
+        <div className="hidden sm:flex md:hidden items-center px-2.5 py-1 rounded-xl bg-amber-50/90 dark:bg-amber-950/70 border border-amber-200/70 dark:border-amber-800/60 text-[11px] font-bold text-amber-950 dark:text-amber-200 truncate max-w-[200px]">
+          <span className="truncate">{todayGreeting.headline}</span>
+        </div>
 
         {/* Right Controls / Actions */}
         <div className="flex items-center gap-1.5 sm:gap-2">

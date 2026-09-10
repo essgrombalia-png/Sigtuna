@@ -34,34 +34,34 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
       const vh = window.innerHeight;
       
       // Determine maximum sensible width per device category
-      let widthCeiling = 380;
+      let widthCeiling = 540;
       if (vw < 360) {
-        widthCeiling = 260;
+        widthCeiling = 300;
       } else if (vw < 420) {
-        widthCeiling = 290;
+        widthCeiling = 350;
       } else if (vw < 640) {
-        widthCeiling = 320;
+        widthCeiling = 400;
       } else if (vw < 1024) {
         // iPad portrait & landscape / tablet
-        widthCeiling = 370;
+        widthCeiling = 470;
       } else {
         // Desktop / large monitor
-        widthCeiling = 410;
+        widthCeiling = 530;
       }
 
-      // Available vertical space check (accounts for header, stats hub, result card, and button)
-      let heightCeiling = 410;
+      // Available vertical space check (accounts for header, title, and button)
+      let heightCeiling = 540;
       if (vh < 640) {
-        heightCeiling = 250;
+        heightCeiling = 330;
       } else if (vh < 740) {
-        heightCeiling = 280;
-      } else if (vh < 860) {
-        heightCeiling = 340;
-      } else {
         heightCeiling = 410;
+      } else if (vh < 860) {
+        heightCeiling = 470;
+      } else {
+        heightCeiling = 530;
       }
 
-      const optimal = Math.max(250, Math.min(widthCeiling, heightCeiling));
+      const optimal = Math.max(290, Math.min(widthCeiling, heightCeiling));
       setSize(optimal);
     };
 

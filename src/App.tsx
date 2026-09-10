@@ -3,13 +3,13 @@ import { X } from 'lucide-react';
 import { Header } from './components/Header';
 import { WheelCanvas } from './components/WheelCanvas';
 import { SpinResultCard } from './components/SpinResultCard';
-import { DailyOverviewHub } from './components/DailyOverviewHub';
 import { HistoryAndFavorites } from './components/HistoryAndFavorites';
 import { WheelEditorModal } from './components/WheelEditorModal';
 import { NotificationSettingsModal } from './components/NotificationSettingsModal';
 import { OfflineSyncBadge } from './components/OfflineSyncBadge';
 
 import { DEFAULT_PRESETS } from './data/defaultPresets';
+import { getTodayGreeting } from './data/dailyGreetings';
 import { ThemeMode, WheelPreset, WheelItem, SpinRecord } from './types';
 
 import { useAudioSound } from './hooks/useAudioSound';
@@ -243,64 +243,54 @@ export default function App() {
         isOnline={isOnline}
       />
 
-      {/* Main App Content Layout - Compact single viewport */}
-      <main className="flex-1 flex flex-col justify-evenly max-w-xl w-full mx-auto px-3 sm:px-4 py-1 sm:py-2 min-h-0 space-y-1.5 sm:space-y-2">
+      {/* Main App Content Layout - Centered spacious wheel layout */}
+      <main className="flex-1 flex flex-col items-center justify-between max-w-2xl w-full mx-auto px-3 sm:px-6 py-2 sm:py-3 min-h-0">
         
-        {/* Top Section with Title and Unified Morning Inspiration & Stats Hub */}
-        <div className="text-center w-full space-y-1 sm:space-y-1.5 shrink-0">
-          <div className="flex items-center justify-center gap-2">
+        {/* Top Section with Title */}
+        <div className="text-center w-full space-y-1 sm:space-y-1.5 shrink-0 max-w-xl">
+          <div className="flex items-center justify-center gap-1.5 flex-wrap">
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold bg-blue-50 dark:bg-blue-950/70 text-blue-900 dark:text-blue-200 border border-blue-200/60 dark:border-blue-800/60 capitalize shadow-2xs">
               {todayDateFormatted}
             </span>
+            <span className="inline-flex sm:hidden items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100/90 dark:bg-amber-950/80 text-amber-900 dark:text-amber-200 border border-amber-300/60 dark:border-amber-800/60 shadow-2xs">
+              {getTodayGreeting().headline}
+            </span>
           </div>
 
-          <h2 className="text-lg sm:text-2xl font-extrabold font-serif tracking-tight text-slate-900 dark:text-white leading-tight">
+          <h2 className="text-xl sm:text-2xl font-black font-serif tracking-tight text-slate-900 dark:text-white leading-tight">
             Snurra hjulet ·{' '}
             <span className="text-amber-600 dark:text-amber-400">
               Ta med dig morgonenergin
             </span>
           </h2>
+        </div>
 
-          {/* Samlad organiserad panel: Citat med shuffle + Dagens & Veckans mätare */}
-          <DailyOverviewHub
-            history={history}
-            onOpenHistory={() => setIsHistoryOpen(true)}
+        {/* Centered Wheel Canvas Section */}
+        <div className="w-full flex-1 flex flex-col items-center justify-center my-auto min-h-0 py-2">
+          <WheelCanvas
+            items={activePreset.items}
+            onSpinEnd={handleSpinEnd}
+            isSpinning={isSpinning}
+            setIsSpinning={setIsSpinning}
+            soundEnabled={soundEnabled}
+            onPlayTickSound={playTickSound}
           />
         </div>
 
-        {/* Centered Wheel & Result Banner Section */}
-        <div className="flex flex-col items-center justify-center w-full max-w-xl mx-auto space-y-1.5 sm:space-y-2 min-h-0">
-          
-          {/* Result Display Banner ABOVE the Wheel */}
-          <div className="w-full shrink-0">
-            <SpinResultCard
-              result={currentSpinResult}
-              isSpinning={isSpinning}
-              onSpinAgain={() => setCurrentSpinResult(null)}
-              presetTitle={activePreset.title}
-              presetId={activePreset.id}
-              presetDescription={activePreset.description}
-              onSaveSpinRecord={handleSaveSpinRecord}
-              soundEnabled={soundEnabled}
-              onPlayFanfare={playFanfare}
-            />
-          </div>
-
-          {/* Interactive Wheel */}
-          <div className="w-full flex flex-col items-center justify-center min-h-0">
-            <WheelCanvas
-              items={activePreset.items}
-              onSpinEnd={handleSpinEnd}
-              isSpinning={isSpinning}
-              setIsSpinning={setIsSpinning}
-              soundEnabled={soundEnabled}
-              onPlayTickSound={playTickSound}
-            />
-          </div>
-
-        </div>
-
       </main>
+
+      {/* Celebratory Spin Result Modal */}
+      <SpinResultCard
+        result={currentSpinResult}
+        isSpinning={isSpinning}
+        onSpinAgain={() => setCurrentSpinResult(null)}
+        presetTitle={activePreset.title}
+        presetId={activePreset.id}
+        presetDescription={activePreset.description}
+        onSaveSpinRecord={handleSaveSpinRecord}
+        soundEnabled={soundEnabled}
+        onPlayFanfare={playFanfare}
+      />
 
       {/* Footer - Sleek single-line bottom bar */}
       <footer className="border-t border-blue-100/70 dark:border-blue-950/60 bg-white/80 dark:bg-[#06152d]/80 backdrop-blur-xs py-1.5 px-4 text-center text-[11px] text-slate-500 dark:text-slate-400 shrink-0">

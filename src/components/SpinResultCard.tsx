@@ -130,145 +130,129 @@ export const SpinResultCard: React.FC<SpinResultCardProps> = ({
     }
   };
 
-  // State 1: Currently spinning
-  if (isSpinning) {
-    return (
-      <div className="w-full max-w-xl mx-auto py-2.5 px-4 rounded-2xl ios-glass-card text-center border border-amber-400/50 dark:border-amber-400/40 animate-pulse">
-        <div className="flex items-center justify-center gap-2 text-amber-800 dark:text-amber-300 font-extrabold text-xs uppercase tracking-wider">
-          <Loader2 className="w-4 h-4 animate-spin text-amber-500 icon-realistic" />
-          <span>Hjulet snurrar fram dagens morgonpepp…</span>
-        </div>
-      </div>
-    );
-  }
-
-  // State 2: No result yet (Prompt to spin)
+  // State 1: Currently spinning or no result - keep view clean and wheel prominent
   if (!result) {
-    return (
-      <div className="w-full max-w-xl mx-auto py-2 px-4 rounded-2xl ios-glass-card text-center border border-blue-200/50 dark:border-blue-900/40">
-        <p className="text-xs sm:text-sm font-bold text-blue-900 dark:text-blue-200 flex items-center justify-center gap-2">
-          <Sparkles className="w-4 h-4 text-amber-500 icon-realistic animate-pulse" />
-          <span>Snurra hjulet för att dra dagens budskap</span>
-        </p>
-      </div>
-    );
+    return null;
   }
 
-  // State 3: Result landed!
+  // State 2: Result landed - Display as an elegant celebratory modal
   return (
-    <div className="w-full max-w-xl mx-auto ios-glass-card rounded-3xl p-3 sm:p-4 border-2 border-blue-500/40 dark:border-blue-500/50 shadow-xl relative overflow-hidden transition-all duration-300 animate-fadeIn">
-      
-      {/* Background Soft Glow */}
-      <div className="absolute -top-12 -right-12 w-36 h-36 bg-gradient-to-br from-blue-500/15 via-amber-400/15 to-transparent rounded-full blur-2xl pointer-events-none" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 dark:bg-black/75 backdrop-blur-md animate-fadeIn">
+      <div className="w-full max-w-lg ios-glass-card rounded-3xl p-5 sm:p-6 border-2 border-amber-400/60 dark:border-amber-400/50 shadow-2xl relative overflow-hidden transition-all duration-300 scale-100 animate-scaleUp">
+        
+        {/* Background Soft Celebration Glow */}
+        <div className="absolute -top-12 -right-12 w-48 h-48 bg-gradient-to-br from-amber-400/25 via-blue-500/20 to-transparent rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-gradient-to-tr from-emerald-500/20 via-amber-400/15 to-transparent rounded-full blur-3xl pointer-events-none" />
 
-      {/* Top Meta Bar */}
-      <div className="flex items-center justify-between gap-2 mb-1.5">
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xs border border-white/30">
-            <Sparkles className="w-3 h-3 fill-current icon-realistic" />
-            <span>Dagens Resultat</span>
-          </span>
-          {result.category && (
-            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-blue-50/80 dark:bg-blue-950/80 text-blue-900 dark:text-blue-200 border border-blue-200/60 dark:border-blue-800/60 shadow-2xs">
-              {result.category}
+        {/* Top Meta Bar */}
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm border border-white/30">
+              <Sparkles className="w-3.5 h-3.5 fill-current icon-realistic" />
+              <span>Dagens Resultat</span>
             </span>
+            {result.category && (
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50/90 dark:bg-blue-950/90 text-blue-900 dark:text-blue-200 border border-blue-200/60 dark:border-blue-800/60 shadow-2xs">
+                {result.category}
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={handleToggleFavorite}
+              className={`ios-glass-btn p-2 rounded-2xl transition-all ${
+                isFavorite
+                  ? 'ios-glass-btn-rose scale-105'
+                  : 'text-slate-500 dark:text-slate-400'
+              }`}
+              title={isFavorite ? 'Sparad i favoriter' : 'Spara som favorit'}
+            >
+              <Heart className={`w-4 h-4 icon-realistic ${isFavorite ? 'fill-current' : ''}`} />
+            </button>
+
+            <button
+              onClick={onSpinAgain}
+              className="ios-glass-btn p-2 rounded-2xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-100"
+              title="Stäng resultat"
+              aria-label="Stäng resultat"
+            >
+              <X className="w-4 h-4 icon-realistic" />
+            </button>
+          </div>
+        </div>
+
+        {/* Main Result Heading & Subtext */}
+        <div aria-live="polite" className="my-3 text-left">
+          <h2 className="text-xl sm:text-2xl font-black font-serif text-slate-900 dark:text-white leading-tight">
+            {result.text}
+          </h2>
+          {result.subtext && (
+            <p className="mt-2 text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
+              {result.subtext}
+            </p>
           )}
         </div>
 
-        <div className="flex items-center gap-1">
+        {/* Action Controls - iOS Liquid Glass Buttons */}
+        <div className="mt-5 pt-3.5 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+          
+          {/* Checkmark Completion Button */}
           <button
-            onClick={handleToggleFavorite}
-            className={`ios-glass-btn p-1.5 rounded-xl transition-all ${
-              isFavorite
-                ? 'ios-glass-btn-rose scale-105'
-                : 'text-slate-500 dark:text-slate-400'
+            onClick={handleToggleComplete}
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all ${
+              isCompleted
+                ? 'ios-glass-btn-emerald'
+                : 'ios-glass-btn text-slate-700 dark:text-slate-200'
             }`}
-            title={isFavorite ? 'Sparad i favoriter' : 'Spara som favorit'}
           >
-            <Heart className={`w-3.5 h-3.5 icon-realistic ${isFavorite ? 'fill-current' : ''}`} />
+            <CheckCircle2 className={`w-4 h-4 icon-realistic ${isCompleted ? 'text-white' : 'text-slate-400 dark:text-slate-400'}`} />
+            <span>{isCompleted ? 'Klar idag!' : 'Markera som klar'}</span>
           </button>
 
-          <button
-            onClick={onSpinAgain}
-            className="ios-glass-btn p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-            title="Dölj / stäng resultat"
-            aria-label="Dölj / stäng resultat"
-          >
-            <X className="w-3.5 h-3.5 icon-realistic" />
-          </button>
-        </div>
-      </div>
+          <div className="flex items-center gap-2 ml-auto">
+            {/* Celebrate Confetti Button */}
+            <button
+              onClick={() => triggerMorningConfetti()}
+              className="ios-glass-btn-gold flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold"
+              title="Fira med konfetti"
+            >
+              <Sparkles className="w-4 h-4 icon-realistic" />
+              <span>Fira</span>
+            </button>
 
-      {/* Main Result Heading & Subtext */}
-      <div aria-live="polite" className="my-1.5 text-center sm:text-left">
-        <h2 className="text-base sm:text-lg font-extrabold font-serif text-slate-900 dark:text-white leading-tight">
-          {result.text}
-        </h2>
-        {result.subtext && (
-          <p className="mt-1 text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-snug font-medium">
-            {result.subtext}
-          </p>
-        )}
-      </div>
+            {/* Share Button */}
+            <button
+              onClick={handleShare}
+              className="ios-glass-btn flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200"
+              title="Dela budskap"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 icon-realistic" />
+                  <span>Kopierat!</span>
+                </>
+              ) : (
+                <>
+                  <Share2 className="w-4 h-4 text-slate-500 dark:text-slate-300 icon-realistic" />
+                  <span>Dela</span>
+                </>
+              )}
+            </button>
 
-      {/* Action Controls - iOS Liquid Glass Buttons */}
-      <div className="mt-3 pt-2.5 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-        
-        {/* Checkmark Completion Button */}
-        <button
-          onClick={handleToggleComplete}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs font-bold transition-all ${
-            isCompleted
-              ? 'ios-glass-btn-emerald'
-              : 'ios-glass-btn text-slate-700 dark:text-slate-200'
-          }`}
-        >
-          <CheckCircle2 className={`w-3.5 h-3.5 icon-realistic ${isCompleted ? 'text-white' : 'text-slate-400 dark:text-slate-400'}`} />
-          <span>{isCompleted ? 'Klar idag!' : 'Markera som klar'}</span>
-        </button>
+            {/* Spin Again Button */}
+            <button
+              onClick={onSpinAgain}
+              className="ios-glass-btn flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold text-slate-900 dark:text-white"
+            >
+              <RotateCcw className="w-4 h-4 icon-realistic" />
+              <span>Stäng</span>
+            </button>
+          </div>
 
-        <div className="flex items-center gap-1.5 ml-auto">
-          {/* Celebrate Confetti Button - iOS Liquid Glass Gold */}
-          <button
-            onClick={() => triggerMorningConfetti()}
-            className="ios-glass-btn-gold flex items-center gap-1 px-3 py-1.5 rounded-2xl text-xs font-bold"
-            title="Fira med konfetti"
-          >
-            <Sparkles className="w-3.5 h-3.5 icon-realistic" />
-            <span>Fira</span>
-          </button>
-
-          {/* Share Button - iOS Liquid Glass */}
-          <button
-            onClick={handleShare}
-            className="ios-glass-btn flex items-center gap-1 px-3 py-1.5 rounded-2xl text-xs font-bold text-slate-700 dark:text-slate-200"
-            title="Dela budskap"
-          >
-            {copied ? (
-              <>
-                <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 icon-realistic" />
-                <span>Kopierat!</span>
-              </>
-            ) : (
-              <>
-                <Share2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-300 icon-realistic" />
-                <span>Dela</span>
-              </>
-            )}
-          </button>
-
-          {/* Spin Again Button - iOS Liquid Glass */}
-          <button
-            onClick={onSpinAgain}
-            className="ios-glass-btn flex items-center gap-1 px-3 py-1.5 rounded-2xl text-xs font-bold text-slate-900 dark:text-white"
-          >
-            <RotateCcw className="w-3.5 h-3.5 icon-realistic" />
-            <span>Snurra igen</span>
-          </button>
         </div>
 
       </div>
-
     </div>
   );
 };
