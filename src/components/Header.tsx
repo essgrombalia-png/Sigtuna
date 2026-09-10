@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Moon, Sun, Volume2, VolumeX, Bell, SlidersHorizontal, History, Download, Laptop } from 'lucide-react';
+import { Moon, Sun, SlidersHorizontal, History, Download, Laptop } from 'lucide-react';
 import { ThemeMode, WheelPreset } from '../types';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import { SigtunaLogo } from './SigtunaLogo';
@@ -124,33 +124,6 @@ export const Header: React.FC<HeaderProps> = ({
             className="ios-glass-btn p-2 sm:p-2.5 rounded-2xl group"
           >
             <SlidersHorizontal className="w-4 h-4 text-blue-600 dark:text-blue-400 icon-realistic group-hover:rotate-90 transition-transform duration-300" />
-          </button>
-
-          {/* Sound Toggle - iOS Liquid Glass */}
-          <button
-            onClick={onToggleSound}
-            title={soundEnabled ? 'Ljud aktiverat' : 'Ljud avstängt'}
-            aria-label={soundEnabled ? 'Ljud aktiverat' : 'Ljud avstängt'}
-            className="ios-glass-btn p-2 sm:p-2.5 rounded-2xl group"
-          >
-            {soundEnabled ? (
-              <Volume2 className="w-4 h-4 text-amber-500 icon-realistic group-hover:scale-110 transition-transform" />
-            ) : (
-              <VolumeX className="w-4 h-4 text-slate-400 dark:text-slate-500 icon-realistic opacity-70" />
-            )}
-          </button>
-
-          {/* Push Notifications Settings - iOS Liquid Glass */}
-          <button
-            onClick={onOpenNotifications}
-            title={notificationsEnabled ? 'Morgonnotiser aktiverade (Klicka för inställningar)' : 'Påminnelser & Notiser (Klicka för att aktivera)'}
-            aria-label="Påminnelser och notiser"
-            className="ios-glass-btn p-2 sm:p-2.5 rounded-2xl relative group"
-          >
-            <Bell className={`w-4 h-4 icon-realistic transition-transform group-hover:rotate-12 ${notificationsEnabled ? 'text-amber-500 fill-amber-500/20' : 'text-slate-600 dark:text-slate-300'}`} />
-            {notificationsEnabled && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#06152d] shadow-xs" />
-            )}
           </button>
 
           {/* Sophisticated Dark / Light Mode Celestial Toggle - iOS Liquid Glass */}
