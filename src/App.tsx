@@ -276,11 +276,11 @@ export default function App() {
         isOnline={isOnline}
       />
 
-      {/* Main App Content Layout - Centered spacious wheel layout */}
-      <main className="flex-1 flex flex-col items-center justify-between max-w-2xl w-full mx-auto px-3 sm:px-6 py-2 sm:py-3 min-h-0">
+      {/* Main App Content Layout - Centered cohesive layout with title directly above wheel */}
+      <main className="flex-1 flex flex-col items-center justify-center max-w-2xl w-full mx-auto px-3 sm:px-6 py-1 sm:py-2 min-h-0 gap-1.5 sm:gap-2.5 my-auto">
         
-        {/* Top Section with Title */}
-        <div className="text-center w-full space-y-1 sm:space-y-1.5 shrink-0 max-w-xl">
+        {/* Title Section placed directly above wheel */}
+        <div className="text-center w-full space-y-0.5 sm:space-y-1 shrink-0 max-w-xl">
           <div className="flex items-center justify-center gap-1.5 flex-wrap">
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold bg-blue-50 dark:bg-blue-950/70 text-blue-900 dark:text-blue-200 border border-blue-200/60 dark:border-blue-800/60 capitalize shadow-2xs">
               {todayDateFormatted}
@@ -290,7 +290,7 @@ export default function App() {
             </span>
           </div>
 
-          <h2 className="text-xl sm:text-2xl font-black font-serif tracking-tight text-slate-900 dark:text-white leading-tight">
+          <h2 className="text-lg sm:text-2xl font-black font-serif tracking-tight text-slate-900 dark:text-white leading-tight">
             Snurra hjulet ·{' '}
             <span className="text-amber-600 dark:text-amber-400">
               Ta med dig morgonenergin
@@ -299,7 +299,7 @@ export default function App() {
         </div>
 
         {/* Centered Wheel Canvas Section */}
-        <div className="w-full flex-1 flex flex-col items-center justify-center my-auto min-h-0 py-1 sm:py-2">
+        <div className="w-full flex flex-col items-center justify-center min-h-0">
           <WheelCanvas
             items={activePreset.items}
             onSpinEnd={handleSpinEnd}
