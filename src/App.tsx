@@ -294,12 +294,11 @@ export default function App() {
 
       {/* Footer - Sleek single-line bottom bar */}
       <footer className="border-t border-blue-100/70 dark:border-blue-950/60 bg-white/80 dark:bg-[#06152d]/80 backdrop-blur-xs py-1.5 px-4 text-center text-[11px] text-slate-500 dark:text-slate-400 shrink-0">
-        <div className="max-w-5xl mx-auto flex items-center justify-between gap-2">
+        <div className="max-w-5xl mx-auto flex items-center justify-center gap-2">
           <span className="flex items-center gap-1.5">
             <span className="inline-block w-2 h-2 rounded-full bg-blue-600 dark:bg-amber-400" />
             <span><strong className="text-slate-700 dark:text-slate-200">Sigtuna kommun</strong> · Internservice för medarbetare & team</span>
           </span>
-          <span className="hidden sm:inline text-blue-700 dark:text-amber-400 font-medium">Officiell grafisk profil</span>
         </div>
       </footer>
 

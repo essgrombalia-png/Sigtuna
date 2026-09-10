@@ -426,18 +426,20 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         </svg>
       </motion.div>
 
-      {/* Canvas Container with welcome fade-in and subtle inviting pulsating idle effect */}
+      {/* Canvas Container with subtle entrance rotation, scale and fade-in */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.92 }}
+        initial={{ opacity: 0, scale: 0.88, rotate: -40 }}
         animate={{
           opacity: 1,
           scale: isSpinning ? 1 : [1, 1.015, 1],
+          rotate: 0,
         }}
         transition={{
-          opacity: { duration: 0.75, delay: 0.15, ease: [0.16, 1, 0.3, 1] },
+          opacity: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+          rotate: { duration: 1.15, ease: [0.16, 1, 0.3, 1] },
           scale: isSpinning
             ? { duration: 0.25 }
-            : { duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: 0.4 },
+            : { duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: 1.2 },
         }}
         onClick={spinWheel}
         onKeyDown={(e) => {
@@ -448,7 +450,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         }}
         tabIndex={0}
         role="button"
-        aria-label="Snurra morgonhjulet"
+        aria-label="Snurra hjulet"
         aria-disabled={isSpinning}
         className={`relative cursor-pointer rounded-full p-2 transition-transform duration-300 ${
           isSpinning ? 'scale-[1.01]' : 'hover:scale-[1.02] active:scale-98'
