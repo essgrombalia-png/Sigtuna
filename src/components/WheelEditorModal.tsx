@@ -16,20 +16,16 @@ interface WheelEditorModalProps {
 }
 
 const PRESET_COLORS = [
-  '#10b981', // emerald
-  '#059669', // dark green
-  '#f59e0b', // amber
-  '#d97706', // dark amber
-  '#3b82f6', // blue
-  '#2563eb', // dark blue
-  '#ec4899', // pink
-  '#db2777', // dark pink
-  '#8b5cf6', // purple
-  '#7c3aed', // dark purple
-  '#06b6d4', // cyan
-  '#14b8a6', // teal
-  '#f97316', // orange
-  '#ef4444', // red
+  '#004c98', // Sigtuna Royal Blue
+  '#003366', // Deep Navy Blue
+  '#0284c7', // Sky Blue
+  '#1d4ed8', // Vibrant Blue
+  '#ffd744', // Sigtuna Gold Yellow
+  '#fbbf24', // Warm Amber Yellow
+  '#ffcc00', // Bright Yellow
+  '#f59e0b', // Honey Gold
+  '#ffffff', // Crisp White
+  '#f1f5f9', // Soft Light Slate
 ];
 
 export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({

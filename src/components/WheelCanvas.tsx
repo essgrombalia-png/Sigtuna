@@ -13,6 +13,94 @@ interface WheelCanvasProps {
   spinCount?: number;
 }
 
+// Helper to create rich premium metallic/glossy linear gradients for slices
+const createSliceGradient = (
+  ctx: CanvasRenderingContext2D,
+  centerX: number,
+  centerY: number,
+  radius: number,
+  startAngle: number,
+  endAngle: number,
+  baseColor: string
+): CanvasGradient => {
+  const midAngle = startAngle + (endAngle - startAngle) / 2;
+  const outerX = centerX + Math.cos(midAngle) * radius;
+  const outerY = centerY + Math.sin(midAngle) * radius;
+
+  const grad = ctx.createLinearGradient(centerX, centerY, outerX, outerY);
+  const hex = (baseColor || '').toLowerCase();
+
+  // Yellow / Gold Gala hues (Radiant Metallic Gold)
+  if (
+    hex.includes('ffd744') ||
+    hex.includes('fbbf24') ||
+    hex.includes('f59e0b') ||
+    hex.includes('ffcc00') ||
+    hex.includes('amber') ||
+    hex.includes('gold') ||
+    hex.includes('yellow')
+  ) {
+    grad.addColorStop(0.0, '#FFFDF0'); // Champagne center highlight
+    grad.addColorStop(0.2, '#FFE57F'); // Radiant golden sheen
+    grad.addColorStop(0.6, '#F59E0B'); // Deep rich amber gold
+    grad.addColorStop(0.88, '#D97706'); // Warm burnished gold
+    grad.addColorStop(1.0, '#853205'); // Beveled outer rim
+    return grad;
+  }
+
+  // Pure / Pearl White hues (Pearlescent Platinum)
+  if (
+    hex.includes('ffffff') ||
+    hex.includes('fff') ||
+    hex.includes('f8fafc') ||
+    hex.includes('f1f5f9')
+  ) {
+    grad.addColorStop(0.0, '#FFFFFF'); // Diamond white center
+    grad.addColorStop(0.3, '#FFFFFF');
+    grad.addColorStop(0.65, '#F1F5F9'); // Pearl luster
+    grad.addColorStop(0.88, '#E2E8F0'); // Platinum sheen
+    grad.addColorStop(1.0, '#B0BAC7'); // Polished silver rim
+    return grad;
+  }
+
+  // Royal / Sigtuna Blue hues (Sapphire Royal Sheen)
+  if (
+    hex.includes('004c98') ||
+    hex.includes('003366') ||
+    hex.includes('1d4ed8') ||
+    hex.includes('2563eb')
+  ) {
+    grad.addColorStop(0.0, '#60A5FA'); // Sapphire center glint
+    grad.addColorStop(0.22, '#2563EB'); // Vivid royal cobalt
+    grad.addColorStop(0.6, '#004C98'); // Sigtuna primary royal
+    grad.addColorStop(0.88, '#002B5C'); // Midnight navy depth
+    grad.addColorStop(1.0, '#001633'); // Beveled deep border
+    return grad;
+  }
+
+  // Sky / Azure Blue hues (Electric Azure Sapphire)
+  if (
+    hex.includes('0284c7') ||
+    hex.includes('0891b2') ||
+    hex.includes('06b6d4') ||
+    hex.includes('38bdf8')
+  ) {
+    grad.addColorStop(0.0, '#E0F2FE'); // Ice blue center glint
+    grad.addColorStop(0.25, '#38BDF8'); // Radiant azure
+    grad.addColorStop(0.65, '#0284C7'); // Deep sky blue
+    grad.addColorStop(0.9, '#0369A1'); // Oceanic depth
+    grad.addColorStop(1.0, '#083344'); // Deep bezel edge
+    return grad;
+  }
+
+  // Fallback / Other custom colors
+  grad.addColorStop(0.0, '#FFFFFF');
+  grad.addColorStop(0.25, baseColor);
+  grad.addColorStop(0.85, baseColor);
+  grad.addColorStop(1.0, '#00000055');
+  return grad;
+};
+
 export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   items,
   onSpinEnd,
@@ -169,7 +257,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         return { lines: [line1, line2], fontSize: fSize };
       };
 
-      // Draw Segments
+      // Draw Segments with Multi-Stop Gala Shaders
       items.forEach((item, index) => {
         const startAngle = rotationAngle + index * sliceAngle;
         const endAngle = startAngle + sliceAngle;
@@ -180,13 +268,26 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         ctx.arc(centerX, centerY, radius, startAngle, endAngle);
         ctx.closePath();
 
-        // Fill segment color
-        ctx.fillStyle = item.color;
+        // Fill segment with lustrous radial/linear gala gradient
+        const sliceGradient = createSliceGradient(
+          ctx,
+          centerX,
+          centerY,
+          radius,
+          startAngle,
+          endAngle,
+          item.color
+        );
+        ctx.fillStyle = sliceGradient;
         ctx.fill();
 
-        // Subtle slice border
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-        ctx.lineWidth = 1.8;
+        // Polished spoke divider with soft metallic golden highlight
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
+        ctx.lineWidth = 1.4;
+        ctx.stroke();
+
+        ctx.strokeStyle = 'rgba(217, 119, 6, 0.35)';
+        ctx.lineWidth = 0.6;
         ctx.stroke();
 
         // Draw Text along radial slice
@@ -203,6 +304,14 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
 
         const textRightEdge = radius - (size < 300 ? 12 : 18);
         const maxLineWidth = Math.max(...lines.map((l) => ctx.measureText(l).width));
+
+        // Check if text is dark (e.g. on yellow or white slices)
+        const isDarkText = Boolean(
+          item.textColor &&
+          item.textColor.toLowerCase() !== '#ffffff' &&
+          item.textColor.toLowerCase() !== '#fff' &&
+          item.textColor.toLowerCase() !== 'white'
+        );
 
         // Subtle translucent background plate/pill behind text for maximum legibility on any color
         const padX = Math.max(7, Math.min(11, size * 0.024));
@@ -222,24 +331,43 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         } else {
           ctx.rect(plateX, plateY, plateW, plateH);
         }
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.28)';
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
+        
+        if (isDarkText) {
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.78)';
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(0, 76, 152, 0.22)';
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        } else {
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.38)';
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
         ctx.restore();
 
         // Text Outline / Deep Shadow for perfect readability
         ctx.save();
         ctx.lineJoin = 'round';
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
-        ctx.lineWidth = Math.max(1.8, Math.min(2.8, itemFontSize * 0.22));
-
-        ctx.fillStyle = item.textColor || '#ffffff';
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 1;
+        
+        if (isDarkText) {
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+          ctx.lineWidth = Math.max(1.4, Math.min(2.4, itemFontSize * 0.18));
+          ctx.fillStyle = item.textColor || '#002d5e';
+          ctx.shadowColor = 'rgba(255, 255, 255, 0.6)';
+          ctx.shadowBlur = 2;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 0;
+        } else {
+          ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+          ctx.lineWidth = Math.max(1.8, Math.min(2.8, itemFontSize * 0.22));
+          ctx.fillStyle = item.textColor || '#ffffff';
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.75)';
+          ctx.shadowBlur = 4;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 1;
+        }
 
         if (lines.length === 1) {
           ctx.strokeText(lines[0], textRightEdge, 0);
@@ -259,61 +387,181 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         ctx.restore();
       });
 
-      // Outer Frame Ring
+      // --- Convex Glass Dome / Gala Sheen Reflection Arc ---
       ctx.save();
       ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = Math.max(5, Math.min(8, Math.round(size * 0.02)));
+      ctx.arc(centerX, centerY, radius - 1, 0, 2 * Math.PI);
+      ctx.clip();
+
+      // Top Glass Sheen Curved Gradient
+      const domeSheenGrad = ctx.createLinearGradient(
+        centerX,
+        centerY - radius,
+        centerX,
+        centerY + radius * 0.4
+      );
+      domeSheenGrad.addColorStop(0.0, 'rgba(255, 255, 255, 0.38)');
+      domeSheenGrad.addColorStop(0.18, 'rgba(255, 255, 255, 0.18)');
+      domeSheenGrad.addColorStop(0.42, 'rgba(255, 255, 255, 0.03)');
+      domeSheenGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.0)');
+      domeSheenGrad.addColorStop(1.0, 'rgba(0, 0, 0, 0.12)'); // soft bottom vignette
+
+      ctx.fillStyle = domeSheenGrad;
+      ctx.fill();
+
+      // Top-Left Gala Spotlight Glare
+      const galaSpotlight = ctx.createRadialGradient(
+        centerX - radius * 0.42,
+        centerY - radius * 0.42,
+        0,
+        centerX - radius * 0.42,
+        centerY - radius * 0.42,
+        radius * 0.75
+      );
+      galaSpotlight.addColorStop(0.0, 'rgba(255, 255, 255, 0.25)');
+      galaSpotlight.addColorStop(0.4, 'rgba(255, 255, 255, 0.06)');
+      galaSpotlight.addColorStop(1.0, 'rgba(255, 255, 255, 0.0)');
+      ctx.fillStyle = galaSpotlight;
+      ctx.fill();
+      ctx.restore();
+
+      // --- Outer Gold & Platinum Gala Bezel ---
+      ctx.save();
+      const goldBezelGrad = ctx.createLinearGradient(
+        centerX - radius,
+        centerY - radius,
+        centerX + radius,
+        centerY + radius
+      );
+      goldBezelGrad.addColorStop(0.0, '#D4AF37'); // Metallic Gold
+      goldBezelGrad.addColorStop(0.22, '#FFF6BD'); // Specular Gold Highlight
+      goldBezelGrad.addColorStop(0.48, '#AA7C11'); // Deep Antique Gold
+      goldBezelGrad.addColorStop(0.72, '#FFE58F'); // Radiant Bright Gold
+      goldBezelGrad.addColorStop(1.0, '#784D08'); // Deep Edge Gold
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius + 2, 0, 2 * Math.PI);
+      ctx.strokeStyle = goldBezelGrad;
+      ctx.lineWidth = Math.max(6, Math.min(9, Math.round(size * 0.024)));
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
+      ctx.shadowBlur = 8;
+      ctx.shadowOffsetY = 2;
+      ctx.stroke();
+
+      // Platinum Inner Accent Ring
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius - 2, 0, 2 * Math.PI);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
+      ctx.lineWidth = 1.2;
       ctx.stroke();
       ctx.restore();
 
-      // Outer Dark Accent Ring
+      // Outer Dark Accent Base
       ctx.save();
       ctx.beginPath();
-      ctx.arc(centerX, centerY, radius + 3, 0, 2 * Math.PI);
-      ctx.strokeStyle = '#0f172a18';
+      ctx.arc(centerX, centerY, radius + 7, 0, 2 * Math.PI);
+      ctx.strokeStyle = 'rgba(15, 23, 42, 0.15)';
       ctx.lineWidth = 1.5;
       ctx.stroke();
       ctx.restore();
 
-      // Outer Rim Decorative Studs/Pins
-      const pinRadius = Math.max(2, Math.min(3.2, size * 0.008));
+      // --- Jeweled Gold Studs / Rivets around Rim ---
+      const pinRadius = Math.max(2.2, Math.min(3.6, size * 0.009));
       for (let i = 0; i < numItems; i++) {
         const pinAngle = rotationAngle + i * sliceAngle;
-        const pinX = centerX + Math.cos(pinAngle) * (radius - 1);
-        const pinY = centerY + Math.sin(pinAngle) * (radius - 1);
+        const pinX = centerX + Math.cos(pinAngle) * (radius + 2);
+        const pinY = centerY + Math.sin(pinAngle) * (radius + 2);
 
         ctx.save();
         ctx.beginPath();
         ctx.arc(pinX, pinY, pinRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = '#f8fafc';
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-        ctx.shadowBlur = 2;
+        const pinGrad = ctx.createRadialGradient(
+          pinX - pinRadius * 0.35,
+          pinY - pinRadius * 0.35,
+          0,
+          pinX,
+          pinY,
+          pinRadius
+        );
+        pinGrad.addColorStop(0.0, '#FFFFFF');
+        pinGrad.addColorStop(0.35, '#FFE57F');
+        pinGrad.addColorStop(0.8, '#D97706');
+        pinGrad.addColorStop(1.0, '#78350F');
+        ctx.fillStyle = pinGrad;
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
+        ctx.shadowBlur = 3;
         ctx.fill();
         ctx.restore();
       }
 
+      // --- Luxury Medallion Center Knob ---
       ctx.save();
+
+      // Layer 1: Outer Gold Rim with Relief Shadow
+      const knobGoldGrad = ctx.createLinearGradient(
+        centerX - outerKnobRadius,
+        centerY - outerKnobRadius,
+        centerX + outerKnobRadius,
+        centerY + outerKnobRadius
+      );
+      knobGoldGrad.addColorStop(0.0, '#FFF5BA');
+      knobGoldGrad.addColorStop(0.28, '#D4AF37');
+      knobGoldGrad.addColorStop(0.7, '#8C6214');
+      knobGoldGrad.addColorStop(1.0, '#FFDF73');
+
       ctx.beginPath();
-      ctx.arc(centerX, centerY, outerKnobRadius, 0, 2 * Math.PI);
-      ctx.fillStyle = '#ffffff';
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.22)';
-      ctx.shadowBlur = 10;
-      ctx.shadowOffsetY = 3;
+      ctx.arc(centerX, centerY, outerKnobRadius + 2, 0, 2 * Math.PI);
+      ctx.fillStyle = knobGoldGrad;
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+      ctx.shadowBlur = 12;
+      ctx.shadowOffsetY = 4;
       ctx.fill();
+
+      // Layer 2: Deep Midnight Sapphire Medallion Core
+      const knobSapphireGrad = ctx.createRadialGradient(
+        centerX - innerKnobRadius * 0.25,
+        centerY - innerKnobRadius * 0.25,
+        0,
+        centerX,
+        centerY,
+        innerKnobRadius
+      );
+      knobSapphireGrad.addColorStop(0.0, '#1E3A8A');
+      knobSapphireGrad.addColorStop(0.55, '#0B132B');
+      knobSapphireGrad.addColorStop(1.0, '#020617');
 
       ctx.beginPath();
       ctx.arc(centerX, centerY, innerKnobRadius, 0, 2 * Math.PI);
-      ctx.fillStyle = '#0f172a';
+      ctx.fillStyle = knobSapphireGrad;
       ctx.fill();
 
-      // Center text
-      ctx.fillStyle = '#ffffff';
-      const knobFontSize = Math.max(8, Math.min(11, Math.round(outerKnobRadius * 0.28)));
-      ctx.font = `900 ${knobFontSize}px 'Plus Jakarta Sans', sans-serif`;
+      // Layer 3: Delicate Inner Gold Filigree Ring
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, innerKnobRadius - 2.5, 0, 2 * Math.PI);
+      ctx.strokeStyle = 'rgba(255, 215, 0, 0.65)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Layer 4: Golden "SNURRA" typography
+      const knobFontSize = Math.max(8.5, Math.min(11.5, Math.round(outerKnobRadius * 0.30)));
+      ctx.font = `900 ${knobFontSize}px 'Plus Jakarta Sans', system-ui, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
+
+      const textGoldGrad = ctx.createLinearGradient(
+        centerX,
+        centerY - knobFontSize / 2,
+        centerX,
+        centerY + knobFontSize / 2
+      );
+      textGoldGrad.addColorStop(0.0, '#FFFBEB');
+      textGoldGrad.addColorStop(0.5, '#FDE047');
+      textGoldGrad.addColorStop(1.0, '#CA8A04');
+
+      ctx.fillStyle = textGoldGrad;
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
+      ctx.shadowBlur = 3;
+      ctx.shadowOffsetY = 1;
       ctx.fillText('SNURRA', centerX, centerY);
 
       ctx.restore();
@@ -429,22 +677,48 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
 
       {/* Wheel and Pointer Wrapper */}
       <div className="relative flex items-center justify-center pt-3 sm:pt-3.5">
-        {/* Top Pointer Indicator with safe clearance */}
+        {/* Top Pointer Indicator with Gala Gold Facets */}
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute top-0 z-20 transform -translate-x-1/2 left-1/2 filter drop-shadow-md transition-transform duration-100 pointer-events-none"
+          className="absolute top-0 z-20 transform -translate-x-1/2 left-1/2 filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.35)] transition-transform duration-100 pointer-events-none"
         >
-          <svg width="34" height="38" viewBox="0 0 38 42" fill="none">
+          <svg width="36" height="42" viewBox="0 0 38 44" fill="none">
+            <defs>
+              <linearGradient id="pointerGoldBase" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#FFF4B8" />
+                <stop offset="40%" stopColor="#D4AF37" />
+                <stop offset="80%" stopColor="#8C6214" />
+                <stop offset="100%" stopColor="#4A3105" />
+              </linearGradient>
+              <linearGradient id="pointerGoldInner" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#FFFDF0" />
+                <stop offset="35%" stopColor="#FDE047" />
+                <stop offset="75%" stopColor="#F59E0B" />
+                <stop offset="100%" stopColor="#B45309" />
+              </linearGradient>
+            </defs>
+            {/* Outer Bevel Shadow Shield */}
             <path
-              d="M19 42L2.54552 10.5C-0.34731 4.71363 3.84738 0 10.3341 0H27.6659C34.1526 0 38.3473 4.71363 35.4545 10.5L19 42Z"
-              fill="#d97706"
+              d="M19 44L2.2 11.5C-0.7 5.7 3.5 0 10.3 0H27.7C34.5 0 38.7 5.7 35.8 11.5L19 44Z"
+              fill="url(#pointerGoldBase)"
             />
+            {/* Inner Gleaming Gold Blade */}
             <path
-              d="M19 36L6.5 11C4.5 7 7 3 12 3H26C31 3 33.5 7 31.5 11L19 36Z"
-              fill="#fbbf24"
+              d="M19 38L6.2 11C4.3 7 6.8 3 11.6 3H26.4C31.2 3 33.7 7 31.8 11L19 38Z"
+              fill="url(#pointerGoldInner)"
             />
+            {/* Center Facet Ridge Line */}
+            <path
+              d="M19 4L19 37"
+              stroke="#FFFFFF"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              opacity="0.85"
+            />
+            {/* Center Sapphire Glint Stud */}
+            <circle cx="19" cy="12" r="3.2" fill="#004C98" stroke="#FFE57F" strokeWidth="1.2" />
           </svg>
         </motion.div>
 
