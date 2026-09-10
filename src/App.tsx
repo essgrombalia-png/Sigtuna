@@ -297,7 +297,7 @@ export default function App() {
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-2">
           <span className="flex items-center gap-1.5">
             <span className="inline-block w-2 h-2 rounded-full bg-blue-600 dark:bg-amber-400" />
-            <span><strong className="text-slate-700 dark:text-slate-200">Sigtuna kommun</strong> · Morgonhjulet för medarbetare & team</span>
+            <span><strong className="text-slate-700 dark:text-slate-200">Sigtuna kommun</strong> · Internservice för medarbetare & team</span>
           </span>
           <span className="hidden sm:inline text-blue-700 dark:text-amber-400 font-medium">Officiell grafisk profil</span>
         </div>

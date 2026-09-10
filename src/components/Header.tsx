@@ -62,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* App title */}
           <div className="flex items-center gap-1.5 min-w-0">
             <h1 className="text-sm sm:text-base font-extrabold tracking-tight text-slate-900 dark:text-white truncate">
-              Morgonhjulet
+              Internservice
             </h1>
             {!isOnline && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300/50 dark:border-amber-700/50 shrink-0">
