@@ -11,6 +11,8 @@ interface WheelEditorModalProps {
   onUpdatePreset: (updatedPreset: WheelPreset) => void;
   onCreateNewPreset: (title: string, description: string) => void;
   onResetDefaults: () => void;
+  onResetCounter?: () => void;
+  todaySpinCount?: number;
 }
 
 const PRESET_COLORS = [
@@ -39,6 +41,8 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
   onUpdatePreset,
   onCreateNewPreset,
   onResetDefaults,
+  onResetCounter,
+  todaySpinCount = 0,
 }) => {
   const [items, setItems] = useState<WheelItem[]>(preset.items);
   const [title, setTitle] = useState<string>(preset.title);
@@ -51,6 +55,7 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
   const [newPresetTitle, setNewPresetTitle] = useState<string>('');
   const [isCreatingNew, setIsCreatingNew] = useState<boolean>(false);
   const [showHelpTooltip, setShowHelpTooltip] = useState<boolean>(false);
+  const [isCounterResetDone, setIsCounterResetDone] = useState<boolean>(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -399,6 +404,47 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
               </button>
             </div>
           )}
+
+          {/* Spin Counter Settings Section */}
+          <div className="p-3.5 sm:p-4 rounded-2xl ios-glass-card border border-amber-300/40 dark:border-amber-700/40 flex items-center justify-between gap-3 flex-wrap bg-amber-50/40 dark:bg-amber-950/20">
+            <div className="space-y-0.5 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                  Dagens snurrräknare
+                </span>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-200/80 dark:bg-amber-900/80 text-amber-900 dark:text-amber-200 tabular-nums">
+                  {todaySpinCount} {todaySpinCount === 1 ? 'snurr' : 'snurr'}
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                Nollställ dagens räknare tillbaka till 0 när som helst.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (onResetCounter) {
+                  onResetCounter();
+                  setIsCounterResetDone(true);
+                  setTimeout(() => setIsCounterResetDone(false), 2500);
+                }
+              }}
+              className="ios-glass-btn flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-amber-900 dark:text-amber-300 bg-amber-100/70 dark:bg-amber-900/50 hover:bg-amber-200/80 active:scale-98 transition-all"
+            >
+              {isCounterResetDone ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 icon-realistic" />
+                  <span className="text-emerald-700 dark:text-emerald-300">Återställd till 0!</span>
+                </>
+              ) : (
+                <>
+                  <RotateCcw className="w-3.5 h-3.5 icon-realistic" />
+                  <span>Återställ räknare till 0</span>
+                </>
+              )}
+            </button>
+          </div>
 
         </div>
 

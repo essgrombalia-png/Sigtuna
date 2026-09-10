@@ -10,6 +10,7 @@ interface WheelCanvasProps {
   setIsSpinning: (spinning: boolean) => void;
   soundEnabled: boolean;
   onPlayTickSound: () => void;
+  spinCount?: number;
 }
 
 export const WheelCanvas: React.FC<WheelCanvasProps> = ({
@@ -19,6 +20,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   setIsSpinning,
   soundEnabled,
   onPlayTickSound,
+  spinCount,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const currentRotationRef = useRef<number>(0);
@@ -390,7 +392,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   }, []);
 
   return (
-    <div className="relative flex flex-col items-center justify-center pt-3 sm:pt-4 w-full">
+    <div className="relative flex flex-col items-center justify-center w-full">
       
       {/* Subtle welcome ambient pulse glow around the wheel: Sigtuna Blue & Gold */}
       <motion.div
@@ -407,61 +409,82 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         className="absolute inset-2 -z-10 rounded-full bg-gradient-to-tr from-[#004c98]/25 via-[#ffd744]/20 to-blue-400/25 blur-xl pointer-events-none"
       />
 
-      {/* Top Pointer Indicator with safe clearance so it doesn't overlap result card */}
-      <motion.div
-        initial={{ opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute top-0 sm:top-0.5 z-20 transform -translate-x-1/2 left-1/2 filter drop-shadow-md transition-transform duration-100 pointer-events-none"
-      >
-        <svg width="34" height="38" viewBox="0 0 38 42" fill="none">
-          <path
-            d="M19 42L2.54552 10.5C-0.34731 4.71363 3.84738 0 10.3341 0H27.6659C34.1526 0 38.3473 4.71363 35.4545 10.5L19 42Z"
-            fill="#d97706"
-          />
-          <path
-            d="M19 36L6.5 11C4.5 7 7 3 12 3H26C31 3 33.5 7 31.5 11L19 36Z"
-            fill="#fbbf24"
-          />
-        </svg>
-      </motion.div>
+      {/* Premium Spin Counter - Placed directly above the pointer/wheel */}
+      {typeof spinCount === 'number' && (
+        <motion.div
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-0.5 sm:mb-1 select-none flex items-center justify-center pointer-events-none z-30"
+        >
+          <span
+            className="text-4xl sm:text-5xl lg:text-6xl font-black font-serif tracking-tight tabular-nums bg-gradient-to-b from-amber-400 via-amber-500 to-amber-600 dark:from-yellow-200 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(245,158,11,0.3)] dark:drop-shadow-[0_2px_14px_rgba(251,191,36,0.4)] leading-none transition-all duration-300"
+            title={`Antal snurr idag: ${spinCount}`}
+            aria-label={`Antal snurr idag: ${spinCount}`}
+          >
+            {spinCount}
+          </span>
+        </motion.div>
+      )}
 
-      {/* Canvas Container with subtle entrance rotation, scale and fade-in */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.88, rotate: -40 }}
-        animate={{
-          opacity: 1,
-          scale: isSpinning ? 1 : [1, 1.015, 1],
-          rotate: 0,
-        }}
-        transition={{
-          opacity: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
-          rotate: { duration: 1.15, ease: [0.16, 1, 0.3, 1] },
-          scale: isSpinning
-            ? { duration: 0.25 }
-            : { duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: 1.2 },
-        }}
-        onClick={spinWheel}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            spinWheel();
-          }
-        }}
-        tabIndex={0}
-        role="button"
-        aria-label="Snurra hjulet"
-        aria-disabled={isSpinning}
-        className={`relative cursor-pointer rounded-full p-2 transition-transform duration-300 ${
-          isSpinning ? 'scale-[1.01]' : 'hover:scale-[1.02] active:scale-98'
-        } focus:outline-none focus:ring-4 focus:ring-amber-500/50`}
-      >
-        <canvas
-          ref={canvasRef}
-          style={{ width: size, height: size }}
-          className="rounded-full shadow-2xl dark:shadow-emerald-900/20 block"
-        />
-      </motion.div>
+      {/* Wheel and Pointer Wrapper */}
+      <div className="relative flex items-center justify-center pt-3 sm:pt-3.5">
+        {/* Top Pointer Indicator with safe clearance */}
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute top-0 z-20 transform -translate-x-1/2 left-1/2 filter drop-shadow-md transition-transform duration-100 pointer-events-none"
+        >
+          <svg width="34" height="38" viewBox="0 0 38 42" fill="none">
+            <path
+              d="M19 42L2.54552 10.5C-0.34731 4.71363 3.84738 0 10.3341 0H27.6659C34.1526 0 38.3473 4.71363 35.4545 10.5L19 42Z"
+              fill="#d97706"
+            />
+            <path
+              d="M19 36L6.5 11C4.5 7 7 3 12 3H26C31 3 33.5 7 31.5 11L19 36Z"
+              fill="#fbbf24"
+            />
+          </svg>
+        </motion.div>
+
+        {/* Canvas Container with subtle entrance rotation, scale and fade-in */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.88, rotate: -40 }}
+          animate={{
+            opacity: 1,
+            scale: isSpinning ? 1 : [1, 1.015, 1],
+            rotate: 0,
+          }}
+          transition={{
+            opacity: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+            rotate: { duration: 1.15, ease: [0.16, 1, 0.3, 1] },
+            scale: isSpinning
+              ? { duration: 0.25 }
+              : { duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: 1.2 },
+          }}
+          onClick={spinWheel}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              spinWheel();
+            }
+          }}
+          tabIndex={0}
+          role="button"
+          aria-label="Snurra hjulet"
+          aria-disabled={isSpinning}
+          className={`relative cursor-pointer rounded-full p-2 transition-transform duration-300 ${
+            isSpinning ? 'scale-[1.01]' : 'hover:scale-[1.02] active:scale-98'
+          } focus:outline-none focus:ring-4 focus:ring-amber-500/50`}
+        >
+          <canvas
+            ref={canvasRef}
+            style={{ width: size, height: size }}
+            className="rounded-full shadow-2xl dark:shadow-emerald-900/20 block"
+          />
+        </motion.div>
+      </div>
 
       {/* Spin Button underneath with iOS Liquid Glass styling - touch friendly */}
       <motion.button

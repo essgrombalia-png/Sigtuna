@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { X } from 'lucide-react';
 import { Header } from './components/Header';
 import { WheelCanvas } from './components/WheelCanvas';
@@ -208,12 +208,45 @@ export default function App() {
     }
   };
 
+  // Saved counter reset timestamp
+  const [counterResetAt, setCounterResetAt] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('sigtuna_wheel_counter_reset_at');
+      return saved ? parseInt(saved, 10) : 0;
+    } catch {
+      return 0;
+    }
+  });
+
+  const handleResetCounter = () => {
+    const now = Date.now();
+    setCounterResetAt(now);
+    try {
+      localStorage.setItem('sigtuna_wheel_counter_reset_at', now.toString());
+    } catch {
+      // ignore
+    }
+  };
+
   // Current Date Label formatted in Swedish
   const todayDateFormatted = new Intl.DateTimeFormat('sv-SE', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
   }).format(new Date());
+
+  // Today's total spins count (respects reset button)
+  const todaySpinCount = useMemo(() => {
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0).getTime();
+    const effectiveStart = Math.max(startOfToday, counterResetAt);
+    const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999).getTime();
+
+    return history.filter((record) => {
+      const time = new Date(record.timestamp).getTime();
+      return time >= effectiveStart && time <= endOfToday;
+    }).length;
+  }, [history, counterResetAt]);
 
   return (
     <div className="min-h-[100dvh] h-[100dvh] flex flex-col justify-between bg-premium-theme text-slate-900 dark:text-slate-100 transition-colors selection:bg-blue-600 selection:text-white overflow-y-auto relative">
@@ -266,7 +299,7 @@ export default function App() {
         </div>
 
         {/* Centered Wheel Canvas Section */}
-        <div className="w-full flex-1 flex flex-col items-center justify-center my-auto min-h-0 py-2">
+        <div className="w-full flex-1 flex flex-col items-center justify-center my-auto min-h-0 py-1 sm:py-2">
           <WheelCanvas
             items={activePreset.items}
             onSpinEnd={handleSpinEnd}
@@ -274,6 +307,7 @@ export default function App() {
             setIsSpinning={setIsSpinning}
             soundEnabled={soundEnabled}
             onPlayTickSound={playTickSound}
+            spinCount={todaySpinCount}
           />
         </div>
 
@@ -315,6 +349,8 @@ export default function App() {
         onUpdatePreset={handleUpdatePreset}
         onCreateNewPreset={handleCreateNewPreset}
         onResetDefaults={handleResetDefaults}
+        onResetCounter={handleResetCounter}
+        todaySpinCount={todaySpinCount}
       />
 
       <NotificationSettingsModal
