@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { WheelItem } from '../types';
-import { Play } from 'lucide-react';
+import { Play, Heart } from 'lucide-react';
 
 interface WheelCanvasProps {
   items: WheelItem[];
@@ -11,6 +11,7 @@ interface WheelCanvasProps {
   soundEnabled: boolean;
   onPlayTickSound: () => void;
   spinCount?: number;
+  spinDuration?: number; // Duration in seconds
 }
 
 // Helper to create rich premium metallic/glossy linear gradients for slices
@@ -109,6 +110,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   soundEnabled,
   onPlayTickSound,
   spinCount,
+  spinDuration = 4.5,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const currentRotationRef = useRef<number>(0);
@@ -116,6 +118,17 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   const lastSegmentIndexRef = useRef<number>(-1);
 
   const [size, setSize] = useState<number>(340);
+  const [isWinningBounce, setIsWinningBounce] = useState<boolean>(false);
+
+  // Auto-reset bounce state safely if needed
+  useEffect(() => {
+    if (isWinningBounce) {
+      const timer = setTimeout(() => {
+        setIsWinningBounce(false);
+      }, 950);
+      return () => clearTimeout(timer);
+    }
+  }, [isWinningBounce]);
 
   // Responsive canvas sizing tailored for mobile, iPad, and desktop resolutions
   useEffect(() => {
@@ -578,19 +591,21 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   const spinWheel = useCallback(() => {
     if (isSpinning || items.length === 0) return;
 
+    setIsWinningBounce(false);
     setIsSpinning(true);
 
     const numItems = items.length;
     const sliceAngle = (2 * Math.PI) / numItems;
 
-    // Randomize target rotations (between 4 and 7 full rotations)
-    const extraRotations = 4 + Math.random() * 3;
+    // Dynamically calculate duration and extra rotations based on spinDuration setting
+    const duration = Math.max(1500, Math.round((spinDuration || 4.5) * 1000)); // ms
+    const baseRotations = Math.max(2.5, (spinDuration || 4.5) * 1.15);
+    const extraRotations = baseRotations + Math.random() * 2.2;
     const targetAddAngle = extraRotations * 2 * Math.PI;
 
     const startAngle = currentRotationRef.current;
     const endAngle = startAngle + targetAddAngle;
 
-    const duration = 4800; // ms
     const startTime = performance.now();
 
     const animate = (now: number) => {
@@ -621,15 +636,16 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
       if (progress < 1) {
         animationFrameRef.current = requestAnimationFrame(animate);
       } else {
-        // Spin finished
+        // Spin finished - trigger exciting CSS win bounce animation on the fortune wheel
         setIsSpinning(false);
+        setIsWinningBounce(true);
         const winningItem = items[currentSegmentIndex];
         onSpinEnd(winningItem);
       }
     };
 
     animationFrameRef.current = requestAnimationFrame(animate);
-  }, [isSpinning, items, drawWheel, setIsSpinning, soundEnabled, onPlayTickSound, onSpinEnd]);
+  }, [isSpinning, items, drawWheel, setIsSpinning, soundEnabled, onPlayTickSound, onSpinEnd, spinDuration]);
 
   useEffect(() => {
     return () => {
@@ -657,21 +673,69 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         className="absolute inset-2 -z-10 rounded-full bg-gradient-to-tr from-[#004c98]/25 via-[#ffd744]/20 to-blue-400/25 blur-xl pointer-events-none"
       />
 
-      {/* Premium Spin Counter - Placed directly above the pointer/wheel */}
+      {/* Heart Spin Counter Badge - Styled to match the reference design */}
       {typeof spinCount === 'number' && (
         <motion.div
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-0.5 sm:mb-1 select-none flex items-center justify-center pointer-events-none z-30"
+          key={spinCount}
+          initial={{ opacity: 0, scale: 0.85, y: -4 }}
+          animate={{ opacity: 1, scale: [0.92, 1.06, 1], y: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-1 sm:mb-1.5 select-none flex items-center justify-center pointer-events-none z-30 relative"
         >
-          <span
-            className="text-4xl sm:text-5xl lg:text-6xl font-black font-serif tracking-tight tabular-nums bg-gradient-to-b from-amber-400 via-amber-500 to-amber-600 dark:from-yellow-200 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(245,158,11,0.3)] dark:drop-shadow-[0_2px_14px_rgba(251,191,36,0.4)] leading-none transition-all duration-300"
+          {/* Soft diffuse coral-rose aura/glow */}
+          <div className="absolute w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#f04456]/40 blur-xl pointer-events-none -z-10" />
+
+          {/* Floating mini hearts around the circle (matching screenshot) */}
+          {/* Mini heart left */}
+          <motion.div
+            animate={{ y: [0, -3, 0], opacity: [0.7, 0.95, 0.7] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute -left-9 sm:-left-10 top-5 text-[#fca5a5] pointer-events-none"
+          >
+            <Heart className="w-3.5 h-3.5 fill-[#fca5a5] stroke-none drop-shadow-xs" />
+          </motion.div>
+
+          {/* Mini heart top center-right */}
+          <motion.div
+            animate={{ y: [0, -2, 0], opacity: [0.6, 0.85, 0.6] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
+            className="absolute -top-3 left-3 text-[#fca5a5] pointer-events-none"
+          >
+            <Heart className="w-2 h-2 fill-[#fca5a5] stroke-none drop-shadow-xs" />
+          </motion.div>
+
+          {/* Mini heart upper-right */}
+          <motion.div
+            animate={{ y: [0, -3, 0], opacity: [0.75, 0.95, 0.75] }}
+            transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: 0.6 }}
+            className="absolute -right-8 sm:-right-9 top-1 text-[#fca5a5] pointer-events-none"
+          >
+            <Heart className="w-3 h-3 fill-[#fca5a5] stroke-none drop-shadow-xs" />
+          </motion.div>
+
+          {/* Mini heart lower-right */}
+          <motion.div
+            animate={{ y: [0, -2, 0], opacity: [0.5, 0.75, 0.5] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+            className="absolute -right-10 sm:-right-12 bottom-2 text-[#fca5a5] pointer-events-none"
+          >
+            <Heart className="w-1.5 h-1.5 fill-[#fca5a5] stroke-none drop-shadow-xs" />
+          </motion.div>
+
+          {/* Central Coral-Red Circular Heart Badge */}
+          <div
+            className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#f04456] flex flex-col items-center justify-center shadow-[0_6px_24px_rgba(240,68,86,0.5)] border border-white/25 relative"
             title={`Antal snurr idag: ${spinCount}`}
             aria-label={`Antal snurr idag: ${spinCount}`}
           >
-            {spinCount}
-          </span>
+            {/* White Heart Icon */}
+            <Heart className="w-5 h-5 sm:w-6 sm:h-6 fill-white text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.2)]" />
+
+            {/* Counter number directly inside the heart badge */}
+            <span className="text-white text-sm sm:text-base font-black font-sans tracking-tight leading-none mt-0.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)] tabular-nums">
+              {spinCount}
+            </span>
+          </div>
         </motion.div>
       )}
 
@@ -680,9 +744,16 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         {/* Top Pointer Indicator with Gala Gold Facets */}
         <motion.div
           initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute top-0 z-20 transform -translate-x-1/2 left-1/2 filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.35)] transition-transform duration-100 pointer-events-none"
+          animate={{
+            opacity: 1,
+            y: 0,
+            rotate: isWinningBounce ? [0, -6, 5, -2, 0] : 0,
+          }}
+          transition={{
+            opacity: { duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] },
+            rotate: { duration: 0.65, ease: 'easeOut' },
+          }}
+          className="absolute top-0 z-20 transform -translate-x-1/2 left-1/2 filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.35)] pointer-events-none"
         >
           <svg width="36" height="42" viewBox="0 0 38 44" fill="none">
             <defs>
@@ -727,13 +798,13 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
           initial={{ opacity: 0, scale: 0.88, rotate: -40 }}
           animate={{
             opacity: 1,
-            scale: isSpinning ? 1 : [1, 1.015, 1],
+            scale: isSpinning || isWinningBounce ? 1 : [1, 1.015, 1],
             rotate: 0,
           }}
           transition={{
             opacity: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
             rotate: { duration: 1.15, ease: [0.16, 1, 0.3, 1] },
-            scale: isSpinning
+            scale: isSpinning || isWinningBounce
               ? { duration: 0.25 }
               : { duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: 1.2 },
           }}
@@ -752,11 +823,17 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
             isSpinning ? 'scale-[1.01]' : 'hover:scale-[1.02] active:scale-98'
           } focus:outline-none focus:ring-4 focus:ring-amber-500/50`}
         >
-          <canvas
-            ref={canvasRef}
-            style={{ width: size, height: size }}
-            className="rounded-full shadow-2xl dark:shadow-emerald-900/20 block"
-          />
+          {/* Wheel canvas with CSS bounce animation applied on win */}
+          <div
+            className={`rounded-full ${isWinningBounce ? 'animate-wheel-bounce' : ''}`}
+            onAnimationEnd={() => setIsWinningBounce(false)}
+          >
+            <canvas
+              ref={canvasRef}
+              style={{ width: size, height: size }}
+              className="rounded-full shadow-2xl dark:shadow-emerald-900/20 block"
+            />
+          </div>
         </motion.div>
       </div>
 
@@ -774,7 +851,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         }`}
       >
         <span className="p-1 rounded-full bg-white/20 dark:bg-white/15 flex items-center justify-center shadow-2xs">
-          <Play className={`w-3.5 h-3.5 fill-current icon-realistic ${isSpinning ? 'animate-spin' : 'group-hover:translate-x-0.5 transition-transform'}`} />
+          <Heart className={`w-3.5 h-3.5 fill-current icon-realistic ${isSpinning ? 'animate-pulse' : 'group-hover:scale-110 transition-transform'}`} />
         </span>
         <span className="drop-shadow-[0_1px_1px_rgba(0,0,0,0.3)]">
           {isSpinning ? 'Hjulet snurrar…' : 'Ge mig dagens budskap'}

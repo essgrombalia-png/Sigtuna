@@ -147,8 +147,8 @@ export const SpinResultCard: React.FC<SpinResultCardProps> = ({
         {/* Top Meta Bar */}
         <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm border border-white/30">
-              <Sparkles className="w-3.5 h-3.5 fill-current icon-realistic" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-gradient-to-r from-rose-500 to-amber-500 text-white shadow-sm border border-white/30">
+              <Heart className="w-3.5 h-3.5 fill-current icon-realistic text-white" />
               <span>Dagens Resultat</span>
             </span>
             {result.category && (
@@ -211,13 +211,13 @@ export const SpinResultCard: React.FC<SpinResultCardProps> = ({
           </button>
 
           <div className="flex items-center gap-2 ml-auto">
-            {/* Celebrate Confetti Button */}
+            {/* Celebrate Hearts Button */}
             <button
               onClick={() => triggerMorningConfetti()}
-              className="ios-glass-btn-gold flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold"
-              title="Fira med konfetti"
+              className="ios-glass-btn-gold flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold group"
+              title="Fira med hjärtan"
             >
-              <Sparkles className="w-4 h-4 icon-realistic" />
+              <Heart className="w-4 h-4 fill-rose-500 text-rose-500 icon-realistic group-hover:scale-125 transition-transform" />
               <span>Fira</span>
             </button>
 

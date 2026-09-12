@@ -22,6 +22,36 @@
   animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Engaging CSS Win Bounce Animation for the Fortune Wheel */
+@keyframes wheel-win-bounce {
+  0% {
+    transform: scale(1) translateY(0);
+  }
+  16% {
+    transform: scale(1.08) translateY(-14px);
+  }
+  32% {
+    transform: scale(0.95) translateY(6px);
+  }
+  50% {
+    transform: scale(1.04) translateY(-5px);
+  }
+  68% {
+    transform: scale(0.98) translateY(2px);
+  }
+  84% {
+    transform: scale(1.01) translateY(-1px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-wheel-bounce {
+  animation: wheel-win-bounce 0.9s cubic-bezier(0.28, 0.84, 0.42, 1) both;
+  will-change: transform;
+}
+
 /* Premium Background: Royal Blue (#004c98), Warm Gold/Yellow (#ffd744), Crisp White (#ffffff) */
 .bg-premium-theme {
   background-color: #ffffff;

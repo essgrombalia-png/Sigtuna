@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { WheelPreset, WheelItem } from '../types';
-import { X, Plus, Trash2, RotateCcw, Palette, Layers, Check, HelpCircle, Lightbulb, Sparkles, ChevronRight } from 'lucide-react';
+import { X, Plus, Trash2, RotateCcw, Palette, Layers, Check, HelpCircle, Lightbulb, Sparkles, ChevronRight, Gauge, Timer, Zap, Heart } from 'lucide-react';
 
 interface WheelEditorModalProps {
   isOpen: boolean;
@@ -13,6 +13,8 @@ interface WheelEditorModalProps {
   onResetDefaults: () => void;
   onResetCounter?: () => void;
   todaySpinCount?: number;
+  spinDuration?: number;
+  onUpdateSpinDuration?: (duration: number) => void;
 }
 
 const PRESET_COLORS = [
@@ -39,6 +41,8 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
   onResetDefaults,
   onResetCounter,
   todaySpinCount = 0,
+  spinDuration = 4.5,
+  onUpdateSpinDuration,
 }) => {
   const [items, setItems] = useState<WheelItem[]>(preset.items);
   const [title, setTitle] = useState<string>(preset.title);
@@ -401,14 +405,104 @@ export const WheelEditorModal: React.FC<WheelEditorModalProps> = ({
             </div>
           )}
 
+          {/* Spin Speed & Duration Slider Section */}
+          <div className="p-3.5 sm:p-4 rounded-2xl ios-glass-card border border-blue-200/60 dark:border-blue-800/60 bg-blue-50/40 dark:bg-blue-950/20 space-y-3">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300">
+                  <Timer className="w-4 h-4 icon-realistic" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                      Snurrhastighet & Varaktighet
+                    </span>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-blue-200/80 dark:bg-blue-900/80 text-blue-900 dark:text-blue-200 tabular-nums">
+                      {spinDuration.toFixed(1)} s
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    Justera hur snabbt och hur länge hjulet roterar innan det stannar.
+                  </p>
+                </div>
+              </div>
+
+              {/* Quick Preset Buttons */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => onUpdateSpinDuration && onUpdateSpinDuration(2.5)}
+                  className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all ${
+                    Math.abs(spinDuration - 2.5) < 0.2
+                      ? 'bg-blue-600 text-white shadow-xs'
+                      : 'ios-glass-btn text-slate-700 dark:text-slate-300 hover:text-blue-600'
+                  }`}
+                  title="Snabb snurr (2.5 sekunder)"
+                >
+                  ⚡ Snabb (2.5s)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onUpdateSpinDuration && onUpdateSpinDuration(4.5)}
+                  className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all ${
+                    Math.abs(spinDuration - 4.5) < 0.2
+                      ? 'bg-blue-600 text-white shadow-xs'
+                      : 'ios-glass-btn text-slate-700 dark:text-slate-300 hover:text-blue-600'
+                  }`}
+                  title="Balanserad standard (4.5 sekunder)"
+                >
+                  🎯 Balanserad (4.5s)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onUpdateSpinDuration && onUpdateSpinDuration(7.0)}
+                  className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all ${
+                    Math.abs(spinDuration - 7.0) < 0.2
+                      ? 'bg-blue-600 text-white shadow-xs'
+                      : 'ios-glass-btn text-slate-700 dark:text-slate-300 hover:text-blue-600'
+                  }`}
+                  title="Långsam & dramatisk inbromsning (7.0 sekunder)"
+                >
+                  🏆 Spännande (7s)
+                </button>
+              </div>
+            </div>
+
+            {/* Slider Track with labels */}
+            <div className="space-y-1.5 pt-1">
+              <input
+                type="range"
+                min="2.0"
+                max="8.0"
+                step="0.5"
+                value={spinDuration}
+                onChange={(e) => {
+                  if (onUpdateSpinDuration) {
+                    onUpdateSpinDuration(parseFloat(e.target.value));
+                  }
+                }}
+                className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600 dark:accent-amber-400 focus:outline-none"
+                aria-label="Snurrvaraktighet i sekunder"
+              />
+              <div className="flex justify-between text-[10px] text-slate-400 font-medium px-0.5">
+                <span>Snabb (2 s)</span>
+                <span>Standard (4.5 s)</span>
+                <span>Lång & Spännande (8 s)</span>
+              </div>
+            </div>
+          </div>
+
           {/* Spin Counter Settings Section */}
-          <div className="p-3.5 sm:p-4 rounded-2xl ios-glass-card border border-amber-300/40 dark:border-amber-700/40 flex items-center justify-between gap-3 flex-wrap bg-amber-50/40 dark:bg-amber-950/20">
+          <div className="p-3.5 sm:p-4 rounded-2xl ios-glass-card border border-rose-200/60 dark:border-rose-900/50 flex items-center justify-between gap-3 flex-wrap bg-rose-50/40 dark:bg-rose-950/20">
             <div className="space-y-0.5 min-w-0">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
-                  Dagens snurrräknare
+                <span className="p-1 rounded-lg bg-[#f04456] text-white">
+                  <Heart className="w-3.5 h-3.5 fill-white" />
                 </span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-200/80 dark:bg-amber-900/80 text-amber-900 dark:text-amber-200 tabular-nums">
+                <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                  Dagens snurrräknare (Hjärta)
+                </span>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-200/80 dark:bg-rose-900/80 text-rose-900 dark:text-rose-200 tabular-nums">
                   {todaySpinCount} {todaySpinCount === 1 ? 'snurr' : 'snurr'}
                 </span>
               </div>

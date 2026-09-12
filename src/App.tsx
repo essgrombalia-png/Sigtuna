@@ -115,6 +115,24 @@ export default function App() {
   // --- Spin State & Results ---
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [currentSpinResult, setCurrentSpinResult] = useState<WheelItem | null>(null);
+  const [spinDuration, setSpinDuration] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('morgonhjulet_spin_duration');
+      if (saved) {
+        const parsed = parseFloat(saved);
+        if (!isNaN(parsed) && parsed >= 2 && parsed <= 10) {
+          return parsed;
+        }
+      }
+    } catch {
+      // Fallback
+    }
+    return 4.5;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('morgonhjulet_spin_duration', String(spinDuration));
+  }, [spinDuration]);
 
   // --- Spin History & Favorites ---
   const [history, setHistory] = useState<SpinRecord[]>(() => {
@@ -308,6 +326,7 @@ export default function App() {
             soundEnabled={soundEnabled}
             onPlayTickSound={playTickSound}
             spinCount={todaySpinCount}
+            spinDuration={spinDuration}
           />
         </div>
 
@@ -351,6 +370,8 @@ export default function App() {
         onResetDefaults={handleResetDefaults}
         onResetCounter={handleResetCounter}
         todaySpinCount={todaySpinCount}
+        spinDuration={spinDuration}
+        onUpdateSpinDuration={setSpinDuration}
       />
 
       <NotificationSettingsModal
