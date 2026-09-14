@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { motion } from 'motion/react';
 import { X } from 'lucide-react';
 import { Header } from './components/Header';
 import { WheelCanvas } from './components/WheelCanvas';
@@ -253,6 +254,9 @@ export default function App() {
     month: 'long',
   }).format(new Date());
 
+  // Today's greeting / motivational quote
+  const todayGreeting = useMemo(() => getTodayGreeting(), []);
+
   // Today's total spins count (respects reset button)
   const todaySpinCount = useMemo(() => {
     const now = new Date();
@@ -294,17 +298,29 @@ export default function App() {
         isOnline={isOnline}
       />
 
-      {/* Main App Content Layout - Centered cohesive layout with title directly above wheel */}
-      <main className="flex-1 flex flex-col items-center justify-center max-w-2xl w-full mx-auto px-3 sm:px-6 py-1 sm:py-2 min-h-0 gap-1.5 sm:gap-2.5 my-auto">
+      {/* Main App Content Layout - Centered cohesive layout with quote and title directly above wheel */}
+      <main className="flex-1 flex flex-col items-center justify-center max-w-2xl w-full mx-auto px-3 sm:px-6 py-1 sm:py-2 min-h-0 gap-2 sm:gap-2.5 my-auto">
         
+        {/* Daily Greeting / Inspirational Quote Banner - Moved down from header */}
+        <motion.div
+          initial={{ opacity: 0, y: -6, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full max-w-lg mx-auto px-4 py-2 sm:py-2.5 rounded-2xl bg-gradient-to-r from-blue-50/90 via-amber-50/70 to-blue-50/90 dark:from-blue-950/70 dark:via-amber-950/40 dark:to-blue-950/70 border border-blue-200/70 dark:border-blue-800/60 shadow-xs text-center select-none"
+        >
+          <p className="text-xs sm:text-sm font-black tracking-tight text-slate-900 dark:text-slate-100">
+            {todayGreeting.headline}
+          </p>
+          <p className="text-[10px] sm:text-[11.5px] font-medium text-slate-600 dark:text-slate-300 mt-0.5 leading-snug">
+            {todayGreeting.subtext}
+          </p>
+        </motion.div>
+
         {/* Title Section placed directly above wheel */}
         <div className="text-center w-full space-y-0.5 sm:space-y-1 shrink-0 max-w-xl">
           <div className="flex items-center justify-center gap-1.5 flex-wrap">
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold bg-blue-50 dark:bg-blue-950/70 text-blue-900 dark:text-blue-200 border border-blue-200/60 dark:border-blue-800/60 capitalize shadow-2xs">
               {todayDateFormatted}
-            </span>
-            <span className="inline-flex sm:hidden items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100/90 dark:bg-amber-950/80 text-amber-900 dark:text-amber-200 border border-amber-300/60 dark:border-amber-800/60 shadow-2xs">
-              {getTodayGreeting().headline}
             </span>
           </div>
 
