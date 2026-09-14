@@ -137,34 +137,34 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
       const vh = window.innerHeight;
       
       // Determine maximum sensible width per device category
-      let widthCeiling = 540;
+      let widthCeiling = 560;
       if (vw < 360) {
-        widthCeiling = 300;
+        widthCeiling = 320;
       } else if (vw < 420) {
-        widthCeiling = 350;
+        widthCeiling = 370;
       } else if (vw < 640) {
-        widthCeiling = 400;
+        widthCeiling = 430;
       } else if (vw < 1024) {
         // iPad portrait & landscape / tablet
-        widthCeiling = 470;
+        widthCeiling = 500;
       } else {
         // Desktop / large monitor
-        widthCeiling = 530;
+        widthCeiling = 560;
       }
 
-      // Available vertical space check (accounts for header, title, and button)
-      let heightCeiling = 540;
+      // Available vertical space check (accounts for header, quote banner, title, and button)
+      let heightCeiling = 560;
       if (vh < 640) {
         heightCeiling = 330;
       } else if (vh < 740) {
         heightCeiling = 410;
       } else if (vh < 860) {
-        heightCeiling = 470;
+        heightCeiling = 480;
       } else {
-        heightCeiling = 530;
+        heightCeiling = 550;
       }
 
-      const optimal = Math.max(290, Math.min(widthCeiling, heightCeiling));
+      const optimal = Math.max(300, Math.min(widthCeiling, heightCeiling));
       setSize(optimal);
     };
 
@@ -206,13 +206,13 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
       ctx.restore();
 
       // Dynamic font size and length limit based on wheel diameter and item count
-      const baseFontSize = Math.max(9, Math.min(13, Math.round(size / 28)));
-      const actualFontSize = numItems > 10 ? Math.max(8.5, baseFontSize - 1.2) : baseFontSize;
+      const baseFontSize = Math.max(10, Math.min(14.5, Math.round(size / 26)));
+      const actualFontSize = numItems > 10 ? Math.max(9, baseFontSize - 1) : baseFontSize;
 
       // Scaled Center Knob / Hub
-      const outerKnobRadius = Math.max(26, Math.min(40, Math.round(size * 0.105)));
+      const outerKnobRadius = Math.max(28, Math.min(42, Math.round(size * 0.108)));
       const innerKnobRadius = outerKnobRadius - 6;
-      const availableRadial = radius - outerKnobRadius - (size < 300 ? 14 : 20);
+      const availableRadial = radius - outerKnobRadius - (size < 300 ? 12 : 18);
 
       // Helper function to format & balance wheel segment text
       const formatSegmentText = (
@@ -221,10 +221,10 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         const clean = rawText.trim();
 
         // 1. Check if it fits comfortably on 1 line
-        ctx.font = `800 ${actualFontSize}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+        ctx.font = `900 ${actualFontSize}px 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif`;
         const singleWidth = ctx.measureText(clean).width;
 
-        if (singleWidth <= availableRadial * 0.88 && clean.length <= 15) {
+        if (singleWidth <= availableRadial * 0.90 && clean.length <= 15) {
           return { lines: [clean], fontSize: actualFontSize };
         }
 
@@ -232,9 +232,9 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         const words = clean.split(/\s+/);
         if (words.length <= 1) {
           let fSize = actualFontSize;
-          while (fSize > 7.5 && ctx.measureText(clean).width > availableRadial * 0.95) {
+          while (fSize > 8 && ctx.measureText(clean).width > availableRadial * 0.95) {
             fSize -= 0.5;
-            ctx.font = `800 ${fSize}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+            ctx.font = `900 ${fSize}px 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif`;
           }
           return { lines: [clean], fontSize: fSize };
         }
@@ -255,16 +255,16 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         const line1 = words.slice(0, bestSplit).join(' ');
         const line2 = words.slice(bestSplit).join(' ');
 
-        let fSize = Math.max(7.5, actualFontSize - 0.8);
-        ctx.font = `800 ${fSize}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+        let fSize = Math.max(8, actualFontSize - 0.6);
+        ctx.font = `900 ${fSize}px 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif`;
 
         while (
-          fSize > 7 &&
+          fSize > 7.5 &&
           (ctx.measureText(line1).width > availableRadial * 0.92 ||
             ctx.measureText(line2).width > availableRadial * 0.92)
         ) {
           fSize -= 0.4;
-          ctx.font = `800 ${fSize}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+          ctx.font = `900 ${fSize}px 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif`;
         }
 
         return { lines: [line1, line2], fontSize: fSize };
@@ -313,7 +313,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         const label = item.wheelLabel || item.text;
         const { lines, fontSize: itemFontSize } = formatSegmentText(label);
 
-        ctx.font = `800 ${itemFontSize}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+        ctx.font = `900 ${itemFontSize}px 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif`;
 
         const textRightEdge = radius - (size < 300 ? 12 : 18);
         const maxLineWidth = Math.max(...lines.map((l) => ctx.measureText(l).width));
@@ -556,8 +556,8 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
       ctx.stroke();
 
       // Layer 4: Golden "SNURRA" typography
-      const knobFontSize = Math.max(8.5, Math.min(11.5, Math.round(outerKnobRadius * 0.30)));
-      ctx.font = `900 ${knobFontSize}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+      const knobFontSize = Math.max(9, Math.min(12.5, Math.round(outerKnobRadius * 0.32)));
+      ctx.font = `900 ${knobFontSize}px 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
@@ -724,15 +724,15 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
 
           {/* Central Coral-Red Circular Heart Badge */}
           <div
-            className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#f04456] flex flex-col items-center justify-center shadow-[0_6px_24px_rgba(240,68,86,0.5)] border border-white/25 relative"
+            className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-gradient-to-tr from-[#e11d48] to-[#f43f5e] flex flex-col items-center justify-center shadow-[0_8px_28px_rgba(225,29,72,0.55)] border-2 border-white/40 relative"
             title={`Antal snurr idag: ${spinCount}`}
             aria-label={`Antal snurr idag: ${spinCount}`}
           >
             {/* White Heart Icon */}
-            <Heart className="w-5 h-5 sm:w-6 sm:h-6 fill-white text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.2)]" />
+            <Heart className="w-5 h-5 sm:w-6 sm:h-6 fill-white text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.3)]" />
 
             {/* Counter number directly inside the heart badge */}
-            <span className="text-white text-sm sm:text-base font-black font-sans tracking-tight leading-none mt-0.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)] tabular-nums">
+            <span className="text-white text-base sm:text-lg font-black font-display tracking-tight leading-none mt-0.5 drop-shadow-[0_1px_3px_rgba(0,0,0,0.35)] tabular-nums">
               {spinCount}
             </span>
           </div>
@@ -755,7 +755,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
           }}
           className="absolute top-0 z-20 transform -translate-x-1/2 left-1/2 filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.35)] pointer-events-none"
         >
-          <svg width="36" height="42" viewBox="0 0 38 44" fill="none">
+          <svg width="38" height="46" viewBox="0 0 38 44" fill="none">
             <defs>
               <linearGradient id="pointerGoldBase" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#FFF4B8" />
@@ -837,23 +837,23 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         </motion.div>
       </div>
 
-      {/* Spin Button underneath with iOS Liquid Glass styling - touch friendly */}
+      {/* Spin Button underneath with iOS Liquid Glass styling - touch friendly & high prominence */}
       <motion.button
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
         onClick={spinWheel}
         disabled={isSpinning}
-        className={`mt-2.5 sm:mt-3.5 w-full sm:w-auto min-h-[46px] sm:min-h-[50px] px-6 sm:px-9 py-2.5 sm:py-3 rounded-2xl font-extrabold text-sm sm:text-base flex items-center justify-center gap-2.5 touch-manipulation transition-all duration-200 ${
+        className={`mt-3 sm:mt-4 w-full sm:w-auto min-h-[52px] sm:min-h-[58px] px-8 sm:px-12 py-3 sm:py-4 rounded-2xl font-black font-display text-base sm:text-lg flex items-center justify-center gap-3 touch-manipulation transition-all duration-200 ${
           isSpinning
             ? 'bg-slate-300/80 dark:bg-slate-800/80 text-slate-500 cursor-not-allowed shadow-none border border-slate-300 dark:border-slate-700'
-            : 'ios-glass-btn-primary tracking-wide text-white group cursor-pointer shadow-lg active:scale-98'
+            : 'ios-glass-btn-primary tracking-wide text-white group cursor-pointer shadow-xl active:scale-98 border-2 border-white/20'
         }`}
       >
-        <span className="p-1 rounded-full bg-white/20 dark:bg-white/15 flex items-center justify-center shadow-2xs">
-          <Heart className={`w-3.5 h-3.5 fill-current icon-realistic ${isSpinning ? 'animate-pulse' : 'group-hover:scale-110 transition-transform'}`} />
+        <span className="p-1.5 rounded-full bg-white/25 dark:bg-white/20 flex items-center justify-center shadow-xs">
+          <Heart className={`w-4 h-4 fill-current icon-realistic ${isSpinning ? 'animate-pulse' : 'group-hover:scale-115 transition-transform'}`} />
         </span>
-        <span className="drop-shadow-[0_1px_1px_rgba(0,0,0,0.3)]">
+        <span className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
           {isSpinning ? 'Hjulet snurrar…' : 'Ge mig dagens budskap'}
         </span>
       </motion.button>

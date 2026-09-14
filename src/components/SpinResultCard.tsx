@@ -183,12 +183,12 @@ export const SpinResultCard: React.FC<SpinResultCardProps> = ({
         </div>
 
         {/* Main Result Heading & Subtext */}
-        <div aria-live="polite" className="my-3 text-left">
-          <h2 className="text-xl sm:text-2xl font-black font-serif text-slate-900 dark:text-white leading-tight">
+        <div aria-live="polite" className="my-3.5 text-left">
+          <h2 className="text-2xl sm:text-3xl font-black font-display text-slate-900 dark:text-white leading-tight">
             {result.text}
           </h2>
           {result.subtext && (
-            <p className="mt-2 text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
+            <p className="mt-2.5 text-base sm:text-lg text-slate-700 dark:text-slate-200 leading-relaxed font-semibold">
               {result.subtext}
             </p>
           )}
