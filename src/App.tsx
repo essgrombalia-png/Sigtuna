@@ -8,6 +8,7 @@ import { HistoryAndFavorites } from './components/HistoryAndFavorites';
 import { WheelEditorModal } from './components/WheelEditorModal';
 import { NotificationSettingsModal } from './components/NotificationSettingsModal';
 import { OfflineSyncBadge } from './components/OfflineSyncBadge';
+import { OfflineModal } from './components/OfflineModal';
 
 import { DEFAULT_PRESETS } from './data/defaultPresets';
 import { getTodayGreeting } from './data/dailyGreetings';
@@ -16,6 +17,7 @@ import { ThemeMode, WheelPreset, WheelItem, SpinRecord } from './types';
 import { useAudioSound } from './hooks/useAudioSound';
 import { useOnlineStatus } from './hooks/useOnlineStatus';
 import { usePushNotifications } from './hooks/usePushNotifications';
+import { usePWAInstall } from './hooks/usePWAInstall';
 
 export default function App() {
   // --- Theme Mode State ---
@@ -195,6 +197,10 @@ export default function App() {
   const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState<boolean>(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
+  const [isOfflineModalOpen, setIsOfflineModalOpen] = useState<boolean>(false);
+
+  // --- PWA Installation Hook ---
+  const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
 
   // Preset Editor handlers
   const handleUpdatePreset = (updated: WheelPreset) => {
@@ -296,6 +302,7 @@ export default function App() {
           setCurrentSpinResult(null);
         }}
         isOnline={isOnline}
+        onOpenOfflineInfo={() => setIsOfflineModalOpen(true)}
       />
 
       {/* Main App Content Layout - Centered cohesive layout with quote and title directly above wheel */}
@@ -364,11 +371,21 @@ export default function App() {
 
       {/* Footer - Sleek single-line bottom bar */}
       <footer className="border-t border-blue-100/70 dark:border-blue-950/60 bg-white/80 dark:bg-[#06152d]/80 backdrop-blur-xs py-1.5 px-4 text-center text-[11px] text-slate-500 dark:text-slate-400 shrink-0">
-        <div className="max-w-5xl mx-auto flex items-center justify-center gap-2">
+        <div className="max-w-5xl mx-auto flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
           <span className="flex items-center gap-1.5">
             <span className="inline-block w-2 h-2 rounded-full bg-blue-600 dark:bg-amber-400" />
-            <span><strong className="text-slate-700 dark:text-slate-200">Sigtuna kommun</strong> · Internservice för medarbetare & team</span>
+            <span><strong className="text-slate-700 dark:text-slate-200">Sigtuna kommun</strong> · Internservice för medarbetare</span>
           </span>
+          <span className="text-slate-300 dark:text-slate-700 hidden xs:inline">•</span>
+          <button
+            type="button"
+            onClick={() => setIsOfflineModalOpen(true)}
+            className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-100 underline decoration-blue-300 dark:decoration-blue-700 underline-offset-2 cursor-pointer transition"
+            title="Information om hur appen fungerar helt offline"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Fungerar offline utan internet</span>
+          </button>
         </div>
       </footer>
 
@@ -404,6 +421,17 @@ export default function App() {
       <OfflineSyncBadge
         isOnline={isOnline}
         pendingSyncCount={pendingSyncCount}
+        onOpenOfflineInfo={() => setIsOfflineModalOpen(true)}
+      />
+
+      <OfflineModal
+        isOpen={isOfflineModalOpen}
+        onClose={() => setIsOfflineModalOpen(false)}
+        isOnline={isOnline}
+        isInstallable={isInstallable}
+        isInstalled={isInstalled}
+        isIOS={isIOS}
+        onInstall={install}
       />
 
       {/* History & Favorites Modal */}

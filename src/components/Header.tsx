@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Moon, Sun, SlidersHorizontal, History, Download, Laptop } from 'lucide-react';
+import { Moon, Sun, SlidersHorizontal, History, Download, ShieldCheck, WifiOff } from 'lucide-react';
 import { ThemeMode, WheelPreset } from '../types';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import { SigtunaLogo } from './SigtunaLogo';
@@ -19,6 +19,7 @@ interface HeaderProps {
   activePresetId: string;
   onSelectPreset: (id: string) => void;
   isOnline: boolean;
+  onOpenOfflineInfo?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -35,8 +36,20 @@ export const Header: React.FC<HeaderProps> = ({
   activePresetId,
   onSelectPreset,
   isOnline,
+  onOpenOfflineInfo,
 }) => {
-  const { isInstallable, isInstalled, install } = usePWAInstall();
+  const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
+
+  const handleInstallClick = async () => {
+    if (isInstallable) {
+      const accepted = await install();
+      if (!accepted && onOpenOfflineInfo) {
+        onOpenOfflineInfo();
+      }
+    } else if (onOpenOfflineInfo) {
+      onOpenOfflineInfo();
+    }
+  };
 
   return (
     <header className="w-full border-b border-blue-100/80 dark:border-blue-950/60 bg-white/90 dark:bg-[#06152d]/90 backdrop-blur-md sticky top-0 z-30 transition-colors shrink-0 shadow-xs">
@@ -62,11 +75,26 @@ export const Header: React.FC<HeaderProps> = ({
             <h1 className="text-sm sm:text-base font-extrabold tracking-tight text-slate-900 dark:text-white truncate">
               Internservice
             </h1>
-            {!isOnline && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300/50 dark:border-amber-700/50 shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                Offline
-              </span>
+            {!isOnline ? (
+              <button
+                type="button"
+                onClick={onOpenOfflineInfo}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300/60 dark:border-amber-700/60 shrink-0 cursor-pointer hover:bg-amber-200 transition"
+                title="Offline-läge aktivt. Klicka för mer information."
+              >
+                <WifiOff className="w-2.5 h-2.5 text-amber-600 dark:text-amber-400 animate-pulse" />
+                Offline redo
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={onOpenOfflineInfo}
+                className="hidden lg:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-300/60 dark:border-emerald-700/60 shrink-0 cursor-pointer hover:bg-emerald-100 dark:hover:bg-emerald-950/80 transition"
+                title="Appen är redo för offline-användning"
+              >
+                <ShieldCheck className="w-2.5 h-2.5 text-emerald-600 dark:text-emerald-400" />
+                Offline redo
+              </button>
             )}
           </div>
         </motion.div>
@@ -133,14 +161,24 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </button>
 
-          {/* PWA Install Button - iOS Liquid Glass */}
-          {isInstallable && !isInstalled && (
+          {/* PWA Install / Offline Info Button - Available across mobile and desktop */}
+          {!isInstalled ? (
             <button
-              onClick={install}
-              className="hidden md:inline-flex ios-glass-btn-primary items-center gap-1.5 px-3.5 py-1.5 rounded-2xl text-xs font-bold transition-all shadow-sm"
+              onClick={handleInstallClick}
+              title="Installera appen för smidig offline-användning"
+              className="inline-flex ios-glass-btn-primary items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs font-bold transition-all shadow-xs cursor-pointer active:scale-98"
             >
               <Download className="w-3.5 h-3.5 icon-realistic" />
-              <span>Installera</span>
+              <span className="hidden xs:inline">Offline & App</span>
+            </button>
+          ) : (
+            <button
+              onClick={onOpenOfflineInfo}
+              title="Appen är installerad och fullt redo offline"
+              className="hidden sm:inline-flex ios-glass-btn items-center gap-1.5 px-2.5 py-1.5 rounded-2xl text-xs font-bold text-emerald-600 dark:text-emerald-400 cursor-pointer"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Offline redo</span>
             </button>
           )}
         </div>

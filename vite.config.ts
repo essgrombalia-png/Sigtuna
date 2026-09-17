@@ -73,14 +73,23 @@ export default defineConfig(() => {
       aistudioMediaPlugin(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['icon.svg', 'apple-touch-icon.png'],
+        includeAssets: [
+          'icon.svg',
+          'apple-touch-icon.png',
+          'sigtuna-vapen.svg',
+          'SIGTUNA_logo_liggandes.svg',
+          'SIGTUNA_logo_ligg_PMS.png',
+          'pwa-192x192.png',
+          'pwa-512x512.png',
+          'pwa-maskable-512x512.png',
+        ],
         manifest: {
           id: '/',
           name: 'Morgonhjulet - Dagsinspiration',
           short_name: 'Morgonhjulet',
           description: 'Ett användarvänligt lyckohjul för en positiv start på dagen med mörkt läge och offline-stöd.',
-          theme_color: '#0f172a',
-          background_color: '#0f172a',
+          theme_color: '#06152d',
+          background_color: '#06152d',
           display: 'standalone',
           start_url: '/',
           scope: '/',
@@ -107,6 +116,10 @@ export default defineConfig(() => {
         },
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
+          navigateFallback: '/index.html',
+          cleanupOutdatedCaches: true,
+          clientsClaim: true,
+          skipWaiting: true,
           runtimeCaching: [
             {
               urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -114,7 +127,7 @@ export default defineConfig(() => {
               options: {
                 cacheName: 'google-fonts-cache',
                 expiration: {
-                  maxEntries: 10,
+                  maxEntries: 15,
                   maxAgeSeconds: 60 * 60 * 24 * 365,
                 },
                 cacheableResponse: {
@@ -128,7 +141,7 @@ export default defineConfig(() => {
               options: {
                 cacheName: 'gstatic-fonts-cache',
                 expiration: {
-                  maxEntries: 10,
+                  maxEntries: 25,
                   maxAgeSeconds: 60 * 60 * 24 * 365,
                 },
                 cacheableResponse: {
